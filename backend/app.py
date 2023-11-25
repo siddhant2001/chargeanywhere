@@ -2,8 +2,13 @@ from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 from models import create_user, create_owner, verify_password
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
-atlas_connection_string = "mongodb+srv://chargeanywhere:chargeanywhere@cluster0.meajul2.mongodb.net/?retryWrites=true&w=majority"
+
+
+atlas_connection_string = os.environ.get('DATABASE_URL', 'default_secret_key')
 
 app = Flask(__name__)
 api = Api(app)

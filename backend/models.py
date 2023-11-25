@@ -1,9 +1,12 @@
 from pymongo import MongoClient
 from bson import ObjectId
 import bcrypt 
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 # Initialize MongoDB Client
-client = MongoClient("mongodb+srv://chargeanywhere:chargeanywhere@cluster0.meajul2.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient(os.environ.get('DATABASE_URL', 'default_secret_key'))
 db = client['ev_charging_db']
 
 class Owner:
