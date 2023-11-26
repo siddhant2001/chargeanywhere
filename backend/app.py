@@ -30,6 +30,9 @@ api.add_resource(HelloWorld, '/hello')
 def login():
     return render_template("login.html",message="")
 
+@app.route('/register')
+def register():
+    return render_template("register.html",message="")
 
 @app.route('/register_user', methods=['POST'])
 def register_user():
@@ -64,10 +67,10 @@ def login_owner():
 
     if owner and verify_password(data["password"], owner["password"]):
         # Login successful
-        return jsonify({"message": "Owner logged in successfully", "owner_id": str(owner["_id"])}), 200
+        return render_template("login.html",message=jsonify({"message": "Owner logged in successfully", "owner_id": str(owner["_id"])})), 200
     else:
         # Login failed
-        return jsonify({"message": "Invalid username or password"}), 401
+        return render_template("login.html",message=jsonify({"message": "Invalid username or password"})), 401
 
 
 if __name__ == '__main__':
