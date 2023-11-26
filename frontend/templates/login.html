@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../frontend/static/style.css">
+    <title>ChargeAnyWhere</title>
+    
+</head>
+<body>
+
+    <header>
+        <h1>ChargeAnyWhere</h1>
+    </header>
+
+    <div id="main-content">
+        <div id="image-container">
+            <img src="../frontend/static/c1.jpeg" alt="Beautiful Image" style="flex:1;max-width: 85%;height: auto;">
+        </div>
+
+        <div id="login-container">
+            <h2>Login</h2>
+            <form id="login-form" action="/login" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">login</button>
+                <p style="background-color:tomato;">
+                    {{message}}
+                </p>
+            </form>
+
+            <a href="/register" class="register-link">Register</a>
+        </div>
+    </div>
+
+</body>
+</html>

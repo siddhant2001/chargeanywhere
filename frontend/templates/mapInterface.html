@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map access</title>
+
+    <!-- Bing Maps API Script -->
+    <script type='text/javascript' 
+            src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3" 
+            async defer></script>
+    
+    <script type='text/javascript' >
+        function GetMap()
+        {
+        var map = new Microsoft.Maps.Map('#myMap');
+
+        //Add your post map load code here.
+        }
+    </script>
+</head>
+
+
+
+<body>
+
+    <div id="myMap" style="position:relative;width:800px;height:800px;"></div>
+
+</body>
+</html>
+
