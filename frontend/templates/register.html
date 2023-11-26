@@ -39,8 +39,10 @@
 
                 if (loc!=null){
                     //alert("The location " + loc.latitude + ", " + loc.longitude + " was clicked.");
-                    document.getElementById('lat').setAttribute("value",loc.latitude)
-                    document.getElementById('long').setAttribute("value",loc.longitude)
+                    document.getElementById('lat').setAttribute("value",loc.latitude);
+                    document.getElementById('long').setAttribute("value",loc.longitude);
+                    var addpin = new Microsoft.Maps.Pushpin(loc,{color: 'blue'});
+                    e.entities.push(addpin);
                 }
 
             }
@@ -108,31 +110,38 @@
                 <div id="myMap" style="position:relative;width:500px;height: 500px;;"></div>
                 <br>
                 <label for="capacity">capacity:</label>
-                <input class="form-control" type="capacity" id="capacity" name="capacity" required
+                <input class="form-control" type="text" id="capacity" name="capacity" required
                     placeholder="Your charger capacity">
                 <br>
-                <label for="chargerType">Charget Type:</label>
-                <input class="form-control" type="chargerType" id="chargerType" name="chargerType" required
+                <label for="chargerType">Charger Type:</label>
+                <select class="form-control" type="text" id="chargerType" name="chargerType" required
                     placeholder="The type of charger you have">
+                    <option value="Charger1">Charger1</option>
+                    <option value="Charger2">Charger2</option>
+                    <option value="Charger3">Charger3</option>
+                </select>
                 <br>
                 
 
             </div>
             <br>
             <div class="section-container" id="2" style="display: none;">
-
                 <h3>EV Owner Information</h3>
-                <label for="username">Username:</label>
-                <input class="form-control" type="text" id="username" name="username" required
-                    placeholder="Your prefered username">
+                <label for="model">EV Model:</label>
+                <input class="form-control" type="text" id="model" name="model" required
+                    placeholder="The model of Your EV">
                 <br>
-                <label for="password">Password:</label>
-                <input class="form-control" type="password" id="password" name="password" required
-                    placeholder="Your prefered password">
+                <label for="make">Make of your EV:</label>
+                <input class="form-control" type="text" id="make" name="make" required
+                    placeholder="EV make year">
                 <br>
-                <label for="email">Email:</label>
-                <input class="form-control" type="email" id="email" name="email" required
-                    placeholder="Your current e-mail id">
+                <label for="EVchargerType">Charger Type:</label>
+                <select class="form-control" type="text" id="EVchargerType" name="EVchargerType" required
+                    placeholder="Charger Type" >
+                    <option value="Charger1">Charger1</option>
+                    <option value="Charger2">Charger2</option>
+                    <option value="Charger3">Charger3</option>
+                </select>
                 <br>
             </div>
 
@@ -171,6 +180,7 @@
             document.getElementById("1").style.display = "block";
         }
     </script>
+ 
 </body>
 
 </html>

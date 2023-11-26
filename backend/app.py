@@ -1,3 +1,4 @@
+import json
 from flask import Flask, jsonify, request, render_template
 from flask_restful import Api, Resource
 from pymongo import MongoClient
@@ -32,7 +33,7 @@ def login():
 
 @app.route('/register')
 def register():
-    return render_template("register.html",message="")
+     return render_template("register.html",message="")
 
 @app.route('/register_user', methods=['POST'])
 def register_user():
