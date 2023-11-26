@@ -42,7 +42,12 @@
                     document.getElementById('lat').setAttribute("value",loc.latitude);
                     document.getElementById('long').setAttribute("value",loc.longitude);
                     var addpin = new Microsoft.Maps.Pushpin(loc,{color: 'blue'});
-                    e.entities.push(addpin);
+                    var mapOptions ={
+                    credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
+                    center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
+                    zoom: 15
+                    }
+                    Microsoft.Maps.Map('#myMap',mapOptions).entities.push(addpin);
                 }
 
             }
