@@ -1,0 +1,2 @@
+login.html <user inputs username and password> -> sends /login handle with username and password
+login.html will be called with error "WrongInput" when either the username or password or both are wrong

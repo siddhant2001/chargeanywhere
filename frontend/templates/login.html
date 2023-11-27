@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../frontend/static/style.css">
+    <title>ChargeAnyWhere</title>
+    
+</head>
+<body>
+
+    <header>
+        <h1>ChargeAnyWhere</h1>
+    </header>
+
+    <div id="main-content">
+        <div id="image-container">
+            <img src="../frontend/static/c1.jpeg" alt="Beautiful Image" style="flex:1;max-width: 85%;height: auto;">
+        </div>
+
+        <div id="login-container">
+            <h2>Login</h2>
+            <form id="login-form">
+                <label for="email">Username:</label>
+                <input type="text" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="button" onclick="submitLogin()">login</button>
+                <p style="background-color:tomato;">
+                    {{message.message}}
+                </p>
+            </form>
+
+            <a href="/register" class="register-link">Register</a>
+        </div>
+    </div>
+    <script>
+        function submitLogin(){
+            var formData={
+                username: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+    
+            fetch(
+                '/login_user',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                }
+                //.then(response => response.json())
+    
+            )
+        }
+    </script>
+</body>
+</html>

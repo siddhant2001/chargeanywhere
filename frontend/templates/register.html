@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../frontend/static/style.css">
+    <!-- Bing Maps API Script -->
+    <script type='text/javascript' 
+            src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3" 
+            async defer>
+    </script>
+    
+    <script type='text/javascript' >
+        function GetMap()
+        {
+            var mapOptions ={
+                credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
+                center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
+                zoom: 15
+            }
+            var map = new Microsoft.Maps.Map('#myMap',mapOptions);
+
+            var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), { color: 'red' });
+            map.entities.push(defaultPin);
+            Microsoft.Maps.Events.addHandler(map, 'click', displayEventInfo);
+
+        //Add your post map load code here.
+        }
+    </script>
+    <script>
+        function displayEventInfo(e) {
+            if (e.targetType == "map") {
+                var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+                var loc = e.target.tryPixelToLocation(point);
+
+                if (loc!=null){
+                    //alert("The location " + loc.latitude + ", " + loc.longitude + " was clicked.");
+                    document.getElementById('lat').setAttribute("value",loc.latitude);
+                    document.getElementById('long').setAttribute("value",loc.longitude);
+                    var addpin = new Microsoft.Maps.Pushpin(loc,{color: 'blue'});
+                    var mapOptions ={
+                    credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
+                    center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
+                    zoom: 15
+                    }
+                    Microsoft.Maps.Map('#myMap',mapOptions).entities.push(addpin);
+                }
+
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <div class="registration-container">
+        <h2 style="text-align: center;">Register</h2>
+        <br>
+        <form action="/register_user" method="post">
+            <div class="section-container">
+                <h3>Personal Information</h3>
+                <label for="username">Name:</label>
+                <input class="form-control" type="text" id="name" name="name" required
+                    placeholder="please provide your full name">
+                <br>
+                <label for="email">Email:</label>
+                <input class="form-control" type="email" id="email" name="email" required
+                    placeholder="Your current e-mail id">
+                <br>
+                <label for="password">Password:</label>
+                <input class="form-control" type="password" id="password" name="password" required
+                    placeholder="Your prefered password">
+                <br>
+                <label for="contact">Contact:</label>
+                <input class="form-control" type="text" id="contact" name="contact" required
+                    placeholder="Contact number">
+                <br>
+            </div>
+            <br>
+            <div class="section-container">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="demo" id="charge_provider" onclick="show1()">
+                    Charge Provider
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="demo" id="ev_owner" onclick="show2()"> EV Owner
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="demo" id="both" onclick="show3()"> Both
+                </div>
+            </div>
+            <br>
+            <div class="section-container" id="1" style="display: none;">
+
+                <h3>Charge Provider Information</h3>
+                <label class="sr-only" for="location1">location:</label>
+                <form>
+                    <div class="form-row">
+                      <div class="col">
+                        <input type="text" class="form-control" name="name" placeholder="latitude" id="lat">
+                      </div>
+                      <div class="col">
+                        <input type="text" class="form-control" name="name" placeholder="longitude" id="long">
+                      </div>
+                    </div>
+                  </form>
+                <br>
+
+                <div id="myMap" style="position:relative;width:500px;height: 500px;;"></div>
+                <br>
+                <label for="capacity">capacity:</label>
+                <input class="form-control" type="text" id="capacity" name="capacity" required
+                    placeholder="Your charger capacity">
+                <br>
+                <label for="chargerType">Charger Type:</label>
+                <select class="form-control" type="text" id="chargerType" name="chargerType" required
+                    placeholder="The type of charger you have">
+                    <option value="Charger1">Charger1</option>
+                    <option value="Charger2">Charger2</option>
+                    <option value="Charger3">Charger3</option>
+                </select>
+                <br>
+                
+
+            </div>
+            <br>
+            <div class="section-container" id="2" style="display: none;">
+                <h3>EV Owner Information</h3>
+                <label for="model">EV Model:</label>
+                <input class="form-control" type="text" id="model" name="model" required
+                    placeholder="The model of Your EV">
+                <br>
+                <label for="make">Make of your EV:</label>
+                <input class="form-control" type="text" id="make" name="make" required
+                    placeholder="EV make year">
+                <br>
+                <label for="EVchargerType">Charger Type:</label>
+                <select class="form-control" type="text" id="EVchargerType" name="EVchargerType" required
+                    placeholder="Charger Type" >
+                    <option value="Charger1">Charger1</option>
+                    <option value="Charger2">Charger2</option>
+                    <option value="Charger3">Charger3</option>
+                </select>
+                <br>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit">Register</button>
+            </div>
+            
+        </form>
+    </div>
+    <br>
+
+    <br><br>
+    {{message}}
+    </div>
+    <script>
+        function show1() {
+            if (document.getElementById("1").style.display == "none") {
+                document.getElementById("1").style.display = "block"
+            }
+            if (document.getElementById("2").style.display != "none") {
+                document.getElementById("2").style.display = "none"
+            }
+
+        }
+
+        function show2() {
+            if (document.getElementById("2").style.display == "none") {
+                document.getElementById("2").style.display = "block"
+            }
+            if (document.getElementById("1").style.display != "none") {
+                document.getElementById("1").style.display = "none"
+            }
+        }
+        function show3() {
+            document.getElementById("2").style.display = "block";
+            document.getElementById("1").style.display = "block";
+        }
+    </script>
+ 
+</body>
+
+</html>
