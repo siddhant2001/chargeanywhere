@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Electric Vehicle Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .tabs {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .tabs a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .tabs a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .tabscontent {
+            display: none;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <a onclick="openTab(event, 'profile')">Profile</a>
+    <a onclick="openTab(event, 'charger-details')">Charger Details</a>
+    <a onclick="openTab(event, 'ev-details')">EV Details</a>
+</div>
+
+<div id="profile" class="tabscontent">
+    <h2>Profile</h2>
+    <p>Content for the profile tab goes here.</p>
+</div>
+
+<div id="charger-details" class="tabscontent">
+    <h2>Charger Details</h2>
+    <p>Content for the charger details tab goes here.</p>
+</div>
+
+<div id="ev-details" class="tabscontent">
+    <h2>EV Details</h2>
+    <p>Content for the EV details tab goes here.</p>
+</div>
+
+<script>
+    // Function to open the selected tab
+    function openTab(evt, tabName) {
+        var i, tabscontent, tabs;
+
+        // Hide all tabs
+        tabscontent = document.getElementsByClassName("tabscontent");
+        for (i = 0; i < tabscontent.length; i++) {
+            tabscontent[i].style.display = "none";
+        }
+
+        // Deactivate all tab links
+        tabs = document.getElementsByClassName("tabs")[0].getElementsByTagName("a");
+        for (i = 0; i < tabs.length; i++) {
+            tabs[i].className = tabs[i].className.replace(" active", "");
+        }
+
+        // Show the selected tab and set it as active
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>
