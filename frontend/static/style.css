@@ -5,6 +5,35 @@ body {
     background-color: #f4f4f4;
 }
 
+.tabs {
+    overflow: hidden;
+    background-color:#45a049;
+}
+.tabs a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.tabs a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.tabscontent {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+.tabs a.active {
+    background-color: #2bac9b; /* Change this color for the selected tab */
+    color: white
+}
 header {
     background-color: #45a049;
     color: #fff;

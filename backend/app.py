@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, redirect, request, render_template, url_for
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 from models import create_user, create_owner, verify_password
@@ -51,6 +51,7 @@ def register_owner():
 
 @app.route('/login_user', methods=['POST'])
 def login_user():
+    
     data = request.json
     user = db.users.find_one({"email": data["email"]})
 
@@ -65,14 +66,23 @@ def login_user():
 def login_owner():
     data = request.json
     owner = db.owners.find_one({"email": data["email"]})
+    
 
     if owner and verify_password(data["password"], owner["password"]):
-        # Login successful
+        #Login successful
+        
         return render_template("login.html",message=jsonify({"message": "Owner logged in successfully", "owner_id": str(owner["_id"])})), 200
     else:
-        # Login failed
-        return render_template("login.html",message=jsonify({"message": "Invalid username or password"})), 401
+        #Login failed
+        #jj=jsonify({"message": "Invalid username or password"})
+        #print("j.response")
+        return render_template((url_for("dash")))#,message="Invalid username or password",error="something")
 
+
+@app.route("/dash")
+def dash():
+    print("j.response")
+    return render_template("dash.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
