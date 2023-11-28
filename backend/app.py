@@ -62,25 +62,29 @@ def login_user():
         # Login failed
         return jsonify({"message": "Invalid username or password"}), 401
 
-@app.route('/login_owner', methods=['POST'])
+@app.route('/dash', methods=['POST','GET'])
 def login_owner():
     data = request.json
     owner = db.owners.find_one({"email": data["email"]})
-    
+    if request.method=='POST':
+        print("j.response")
+        dashs()
+        return print("j.response")#render_template("dash.html"), print("j.response")
+   
 
-    if owner and verify_password(data["password"], owner["password"]):
-        #Login successful
+ #   if owner and verify_password(data["password"], owner["password"]):
+ #       #Login successful
         
-        return render_template("login.html",message=jsonify({"message": "Owner logged in successfully", "owner_id": str(owner["_id"])})), 200
-    else:
-        #Login failed
-        #jj=jsonify({"message": "Invalid username or password"})
-        #print("j.response")
-        return render_template((url_for("dash")))#,message="Invalid username or password",error="something")
+  #      return render_template("login.html",message=jsonify({"message": "Owner logged in successfully", "owner_id": str(owner["_id"])})), 200
+   # else:
+    #    #Login failed
+     #   #jj=jsonify({"message": "Invalid username or password"})
+      #  #print("j.response")
+       # return render_template("dash.html")#,message="Invalid username or password",error="something")
 
 
-@app.route("/dash")
-def dash():
+#@app.route("/dashs")
+def dashs():
     print("j.response")
     return render_template("dash.html")
 

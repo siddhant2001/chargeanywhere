@@ -20,14 +20,14 @@
 
         <div id="login-container">
             <h2>Login</h2>
-            <form id="login-form">
+            <form id="login-form" action="/loginAuth" method="post">
                 <label for="email">Username:</label>
                 <input type="text" id="email" name="email" required>
 
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="text" id="password" name="password" required>
 
-                <button type="button" onclick="submitLogin()">login</button>
+                <button type="submit" >login</button>
                 <p style="background-color:tomato;">
                     {{message}}
                 </p>
@@ -36,25 +36,7 @@
             <a href="/register" class="register-link">Register</a>
         </div>
     </div>
-    <script>
-        function submitLogin(){
-            var formData={
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
-            };
-    
-            fetch(
-                '/login_owner',{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                }
-                //.then(response => response.json())
-    
-            )
-        }
-    </script>
+
+
 </body>
 </html>

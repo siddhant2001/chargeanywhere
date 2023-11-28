@@ -15,6 +15,7 @@
     </script>
     
     <script type='text/javascript' >
+        var map
         function GetMap()
         {
             var mapOptions ={
@@ -22,36 +23,31 @@
                 center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
                 zoom: 15
             }
-            var map = new Microsoft.Maps.Map('#myMap',mapOptions);
+            map = new Microsoft.Maps.Map('#myMap',mapOptions);
 
             var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), { color: 'red' });
             map.entities.push(defaultPin);
-            Microsoft.Maps.Events.addHandler(map, 'click', displayEventInfo);
-
-        //Add your post map load code here.
+            Microsoft.Maps.Events.addHandler(map, 'click', getlang);
         }
-    </script>
-    <script>
-        function displayEventInfo(e) {
+        function getlang(e)
+        {
             if (e.targetType == "map") {
                 var point = new Microsoft.Maps.Point(e.getX(), e.getY());
                 var loc = e.target.tryPixelToLocation(point);
-
                 if (loc!=null){
-                    //alert("The location " + loc.latitude + ", " + loc.longitude + " was clicked.");
                     document.getElementById('lat').setAttribute("value",loc.latitude);
                     document.getElementById('long').setAttribute("value",loc.longitude);
-                    var addpin = new Microsoft.Maps.Pushpin(loc,{color: 'blue'});
-                    var mapOptions ={
-                    credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
-                    center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
-                    zoom: 15
-                    }
-                    Microsoft.Maps.Map('#myMap',mapOptions).entities.push(addpin);
-                }
 
-            }
-        }
+                    if (map.entities.getLength() > 0 && map.entities.get(0) instanceof Microsoft.Maps.Pushpin) {
+                        var existingPushpin = map.entities.get(0);
+                        existingPushpin.setLocation(loc);
+                    } else {
+                        var addpin = new Microsoft.Maps.Pushpin(loc,{color: 'blue'},{'draggable': false});
+                        map.entities.push(addpin);
+                    }
+                    }
+                }
+        } 
     </script>
 </head>
 
@@ -70,11 +66,11 @@
                     placeholder="please provide your full name">
                 <br>
                 <label for="email">Email:</label>
-                <input class="form-control" type="email" id="email" name="email" required
+                <input class="form-control" type="text" id="email" name="email" required
                     placeholder="Your current e-mail id">
                 <br>
                 <label for="password">Password:</label>
-                <input class="form-control" type="password" id="password" name="password" required
+                <input class="form-control" type="text" id="password" name="password" required
                     placeholder="Your prefered password">
                 <br>
                 <label for="contact">Contact:</label>
@@ -100,26 +96,25 @@
 
                 <h3>Charge Provider Information</h3>
                 <label class="sr-only" for="location1">location:</label>
-                <form>
-                    <div class="form-row">
-                      <div class="col">
-                        <input type="text" class="form-control" name="name" placeholder="latitude" id="lat">
-                      </div>
-                      <div class="col">
-                        <input type="text" class="form-control" name="name" placeholder="longitude" id="long">
-                      </div>
+                <div class="form-row">
+                    <div class="col">
+                    <input type="text" class="chargerForm" name="name" placeholder="latitude" id="lat">
                     </div>
-                  </form>
+                    <div class="col">
+                    <input type="text" class="chargerForm" name="name" placeholder="longitude" id="long">
+                    </div>
+                </div>
                 <br>
 
-                <div id="myMap" style="position:relative;width:500px;height: 500px;;"></div>
+         
+            <div id="myMap" style="position:relative; width: 500px; height: 500px;" onclick="displayEventInfo(map)"></div>
                 <br>
                 <label for="capacity">capacity:</label>
-                <input class="form-control" type="text" id="capacity" name="capacity" required
+                <input class="chargerForm" type="text" id="capacity" name="capacity" 
                     placeholder="Your charger capacity">
                 <br>
                 <label for="chargerType">Charger Type:</label>
-                <select class="form-control" type="text" id="chargerType" name="chargerType" required
+                <select class="chargerForm" type="text" id="chargerType" name="chargerType" 
                     placeholder="The type of charger you have">
                     <option value="Charger1">Charger1</option>
                     <option value="Charger2">Charger2</option>
@@ -133,16 +128,13 @@
             <div class="section-container" id="2" style="display: none;">
                 <h3>EV Owner Information</h3>
                 <label for="model">EV Model:</label>
-                <input class="form-control" type="text" id="model" name="model" required
-                    placeholder="The model of Your EV">
-                <br>
+                <input class="EVform" type="text" id="model" name="model" required placeholder="The model of Your EV"><br>
+
                 <label for="make">Make of your EV:</label>
-                <input class="form-control" type="text" id="make" name="make" required
-                    placeholder="EV make year">
-                <br>
+                <input class="EVform" type="text" id="make" name="make" required placeholder="EV make year"><br>
+                
                 <label for="EVchargerType">Charger Type:</label>
-                <select class="form-control" type="text" id="EVchargerType" name="EVchargerType" required
-                    placeholder="Charger Type" >
+                <select class="EVform" type="text" id="EVchargerType" name="EVchargerType" required placeholder="Charger Type" >
                     <option value="Charger1">Charger1</option>
                     <option value="Charger2">Charger2</option>
                     <option value="Charger3">Charger3</option>
@@ -165,9 +157,19 @@
         function show1() {
             if (document.getElementById("1").style.display == "none") {
                 document.getElementById("1").style.display = "block"
+                var elements=document.getElementsByClassName("chargerForm")
+                for (i=0;i<elements.length;i++){
+                    elements[i].required = true
+                } 
+
             }
             if (document.getElementById("2").style.display != "none") {
                 document.getElementById("2").style.display = "none"
+                var elements=document.getElementsByClassName("EVform")
+                for (i=0;i<elements.length;i++){
+                    elements[i].required = false
+                    //elements[i].value = ""
+                } 
             }
 
         }
@@ -175,14 +177,32 @@
         function show2() {
             if (document.getElementById("2").style.display == "none") {
                 document.getElementById("2").style.display = "block"
+                var elements=document.getElementsByClassName("EVform")
+                for (i=0;i<elements.length;i++){
+                    elements[i].required = true
+                } 
             }
             if (document.getElementById("1").style.display != "none") {
                 document.getElementById("1").style.display = "none"
+                var elements=document.getElementsByClassName("chargerForm")
+                for (i=0;i<elements.length;i++){
+                    elements[i].required = false
+                    //elements[i].value = ""
+                }
             }
         }
         function show3() {
             document.getElementById("2").style.display = "block";
             document.getElementById("1").style.display = "block";
+            /*var elements1=document.getElementsByClassName("chargerForm")
+                for (i=0;i<elements1.length;i++){
+                    elements1[i].required = true
+                }
+            var elements2=document.getElementsByClassName("EVform")
+                for (j=0;j<elements2.length;j++){
+                    elements2[j].required = true
+                }*/
+
         }
     </script>
  

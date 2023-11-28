@@ -26,19 +26,21 @@ class User:
         self.charging_history = charging_history if charging_history is not None else []
 
 class ChargingStation:
-    def __init__(self, location, owner_id, capacity, available_slots):
-        self.location = location
+    def __init__(self, latitude, longitude, owner_id, capacity, available_slots, chargerType):
+        self.latitude = latitude
+        self.longitude = longitude
         self.owner_id = ObjectId(owner_id)  # Reference to an Owner document
         self.capacity = capacity
         self.available_slots = available_slots
+        self.chargerType = chargerType
         # Todo - More details for each station
 
 class Vehicle:
-    def __init__(self, owner_id, model, make, charging_spec):
+    def __init__(self, owner_id, model, make, chargerType):
         self.owner_id = ObjectId(owner_id)  # Reference to a User document
         self.model = model
         self.make = make
-        self.charging_spec = charging_spec
+        self.chargerType = chargerType
 
 # Example function to create a user
 def create_user(user_data):
