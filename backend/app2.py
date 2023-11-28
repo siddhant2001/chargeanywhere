@@ -40,10 +40,11 @@ def register():
 @app.route('/loginAuth', methods=['GET','POST'])
 def loginAuth():
     dataIN=request.form.to_dict(flat=False)
+    data=request.json()
     print(dataIN)
-    #user = db.users.find_one({"email": data["email"]})
+    user = db.users.find_one({"email": data["email"]})
 
-    if True :#user :#and verify_password(data["password"], user["password"]):
+    if True user and verify_password(data["password"], user["password"]):
         # Login successful
         dashData=jsonify({"message": "User logged in successfully"});#, "user_id": str(user["_id"])})
         return  render_template('dash.html',data=dataIN),200
