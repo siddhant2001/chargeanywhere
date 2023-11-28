@@ -39,22 +39,26 @@ def register():
 
 @app.route('/loginAuth', methods=['GET','POST'])
 def loginAuth():
-    jsdata=request.form.to_dict(flat=False)
-    #print(jsdata) 
-    #return ('',204)
-    if request.method=='POST':
-        return render_template('dash.html',data=jsdata)
+    data=request.form.to_dict(flat=False)
+    user = db.users.find_one({"email": data["email"]})
+
+    if user and verify_password(data["password"], user["password"]):
+        # Login successful
+        dashData=jsonify({"message": "User logged in successfully", "user_id": str(user["_id"])})
+        return  render_template('dash.html',data=dashData),200
     else:
-        return render_template('login.html',message="data")
+        # Login failed
+        faildata=jsonify({"message": "Invalid username or password"})
+        return render_template('login.html',message=faildata), 401
 
 
 @app.route('/register_user', methods=['GET','POST'])
 def register_user():
     user_data = request.form.to_dict(flat=False)
     print(user_data)
-    #user_id = create_user(user_data)
-    #print(user_id)
-    return ''#jsonify({"user_id": user_id}), 201
+    user_id = create_user(user_data)
+    print(user_id)
+    return jsonify({"user_id": user_id}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
