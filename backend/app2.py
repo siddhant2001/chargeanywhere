@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, redirect, request, render_template, url_for, session
+from flask import Flask, jsonify, redirect, request, render_template, url_for, session, send_from_directory
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 from models import create_user, create_owner, verify_password
@@ -74,6 +74,11 @@ def logout():
 @app.route('/')
 def index():
     return "Welcome to the ChargeAnywhere App!"
+
+@app.route('/getChargerHTML')
+def getChargerHTML():
+    
+    return send_from_directory('../frontend/templates','ChargerDash.html')
 
 
 if __name__ == '__main__':

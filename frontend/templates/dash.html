@@ -26,12 +26,12 @@
 <div id="charger-details" class="tabscontent">
     <h2>Charger Details</h2>
     <p>Content for the charger details tab goes here.</p>
+    <div id="chargerDash"></div>
 </div>
 
 <div id="ev-details" class="tabscontent">
     <h2>EV Details</h2>
     <p>Content for the EV details tab goes here.</p>
-    <div id="evContent" class="ev-dispaly"></div>
     <div id="evContent" class="ev-dispaly"></div>
 </div>
 <div id="logout" class="tabscontent" >
@@ -69,7 +69,22 @@
     else
         content='<h1>nouser</h1>';
 
-    di.insertAdjacentHTML('afterbegin',content);
+    di.item(0).insertAdjacentHTML('afterbegin',content);
+
+    // Your existing JavaScript here
+</script>
+<script>
+    // Function to load external HTML into a div
+    function loadExternalHTML() {
+        
+        fetch('/getChargerHTML')
+            .then(response => response.text())
+            .then(data => {document.getElementById('chargerDash').innerHTML = data;})
+            .catch(error => console.error('Error loading external HTML:', error));
+    }
+
+    // Call the function to load external HTML
+    loadExternalHTML();
 </script>
 </body>
 </html>

@@ -131,3 +131,18 @@ button:hover {
     box-shadow: 0px 0px 10px 0px #000000;
     margin-right: 20px;
 }
+#Mapcontainer {
+    display: flex;
+    height: 100vh;
+}
+
+#map {
+    flex: 1;
+}
+
+#assetdetails {
+    flex: 1;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-sizing: border-box;
+}
