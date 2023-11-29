@@ -27,16 +27,16 @@
 
             var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), { color: 'red' });
             map.entities.push(defaultPin);
-            Microsoft.Maps.Events.addHandler(map, 'click', getlang);
+            Microsoft.Maps.Events.addHandler(map, 'click', handleMapClick);
         }
-        function getlang(e)
+        function handleMapClick(e)
         {
             if (e.targetType == "map") {
                 var point = new Microsoft.Maps.Point(e.getX(), e.getY());
                 var loc = e.target.tryPixelToLocation(point);
                 if (loc!=null){
-                    document.getElementById('lat').setAttribute("value",loc.latitude);
-                    document.getElementById('long').setAttribute("value",loc.longitude);
+                    document.getElementById('lat').value=loc.latitude;
+                    document.getElementById('long').value=loc.longitude;
 
                     if (map.entities.getLength() > 0 && map.entities.get(0) instanceof Microsoft.Maps.Pushpin) {
                         var existingPushpin = map.entities.get(0);
@@ -51,7 +51,7 @@
     </script>
 </head>
 
-<body>
+<body onlanguagechange="reset()">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
@@ -92,54 +92,57 @@
                 </div>
             </div>
             <br>
-            <div class="section-container" id="1" style="display: none;">
+            <div class="flex-container">
+                <div class="flex-child" id="1">
 
-                <h3>Charge Provider Information</h3>
-                <label class="sr-only" for="location1">location:</label>
-                <div class="form-row">
-                    <div class="col">
-                    <input type="text" class="chargerForm" name="name" placeholder="latitude" id="lat">
+                    <h3>Charge Provider Information</h3>
+                    <label class="sr-only" for="location1">location:</label>
+                    <div class="form-row">
+                        <div class="col">
+                        <input type="text" class="chargerForm" name="name" placeholder="latitude" id="lat">
+                        </div>
+                        <div class="col">
+                        <input type="text" class="chargerForm" name="name" placeholder="longitude" id="long">
+                        </div>
                     </div>
-                    <div class="col">
-                    <input type="text" class="chargerForm" name="name" placeholder="longitude" id="long">
-                    </div>
+                    <br>
+
+            
+                    <div class="chargerForm" id="myMap" style="position:relative; width: 500px; height: 500px;" onclick="displayEventInfo(map)"></div>
+                    <br>
+                    <label for="capacity">capacity:</label>
+                    <input class="chargerForm" type="text" id="capacity" name="capacity" 
+                        placeholder="Your charger capacity">
+                    <br>
+
+                    <label for="chargerType">Charger Type:</label>
+                    <select class="chargerForm" type="text" id="chargerType" name="chargerType" 
+                        placeholder="The type of charger you have">
+                        <option value="Charger1">Charger1</option>
+                        <option value="Charger2">Charger2</option>
+                        <option value="Charger3">Charger3</option>
+                    </select>
+                    <br>
+                    
+
                 </div>
                 <br>
-
-         
-            <div id="myMap" style="position:relative; width: 500px; height: 500px;" onclick="displayEventInfo(map)"></div>
-                <br>
-                <label for="capacity">capacity:</label>
-                <input class="chargerForm" type="text" id="capacity" name="capacity" 
-                    placeholder="Your charger capacity">
-                <br>
-                <label for="chargerType">Charger Type:</label>
-                <select class="chargerForm" type="text" id="chargerType" name="chargerType" 
-                    placeholder="The type of charger you have">
-                    <option value="Charger1">Charger1</option>
-                    <option value="Charger2">Charger2</option>
-                    <option value="Charger3">Charger3</option>
-                </select>
-                <br>
-                
-
-            </div>
-            <br>
-            <div class="section-container" id="2" style="display: none;">
+                <div class="flex-child" id="2" >
                 <h3>EV Owner Information</h3>
                 <label for="model">EV Model:</label>
-                <input class="EVform" type="text" id="model" name="model" required placeholder="The model of Your EV"><br>
+                <input class="EVform" type="text" id="model" name="model"  placeholder="The model of Your EV"><br>
 
                 <label for="make">Make of your EV:</label>
-                <input class="EVform" type="text" id="make" name="make" required placeholder="EV make year"><br>
+                <input class="EVform" type="text" id="make" name="make"  placeholder="EV make year"><br>
                 
                 <label for="EVchargerType">Charger Type:</label>
-                <select class="EVform" type="text" id="EVchargerType" name="EVchargerType" required placeholder="Charger Type" >
+                <select class="EVform" type="text" id="EVchargerType" name="EVchargerType"  placeholder="Charger Type" >
                     <option value="Charger1">Charger1</option>
                     <option value="Charger2">Charger2</option>
                     <option value="Charger3">Charger3</option>
                 </select>
                 <br>
+            </div>
             </div>
 
             <div style="text-align: center;">
@@ -154,55 +157,83 @@
     {{message}}
     </div>
     <script>
-        function show1() {
-            if (document.getElementById("1").style.display == "none") {
-                document.getElementById("1").style.display = "block"
-                var elements=document.getElementsByClassName("chargerForm")
-                for (i=0;i<elements.length;i++){
-                    elements[i].required = true
+        // Charger form is 1 and EV form is 2
+        var charElements=document.getElementsByClassName("chargerForm")
+        var evElements=document.getElementsByClassName("EVform")
+        var cahrID=document.getElementById("1")
+        var evID=document.getElementById("2")
+        var inputChar=cahrID.querySelectorAll('input,select')
+        var inputEV=evID.querySelectorAll('input,select')
+        //reset();
+
+        //default status assignment
+        cahrID.style.opacity="0.2"
+        evID.style.opacity="0.2"       
+        cahrID.style.backgroundColor = "grey"
+        evID.style.backgroundColor = "grey"
+            for (i=0;i<evElements.length;i++){
+                evElements.item(i).setAttribute("disabled","true")
+                //charElements.
+            } 
+            for (j=0;j<charElements.length;j++){
+                charElements.item(j).setAttribute("disabled","true")
+            }
+        function reset(){
+            for (k=0;k<inputChar.length;k++){
+                inputChar[k].value=""
+            }
+            for (l=0;l<inputEV.length;l++){
+                inputEV[l].value=""
+            }
+        }
+            
+            
+        function show1() {   
+            cahrID.style.opacity="1"
+            evID.style.opacity="0.2"       
+            cahrID.style.backgroundColor = "white"
+            evID.style.backgroundColor = "grey"
+            reset();
+                for (i=0;i<evElements.length;i++){
+                    evElements.item(i).setAttribute("disabled","true")
+                    //charElements.
                 } 
 
-            }
-            if (document.getElementById("2").style.display != "none") {
-                document.getElementById("2").style.display = "none"
-                var elements=document.getElementsByClassName("EVform")
-                for (i=0;i<elements.length;i++){
-                    elements[i].required = false
-                    //elements[i].value = ""
-                } 
-            }
+                for (j=0;j<charElements.length;j++){
+                    charElements.item(j).removeAttribute("disabled")
+                }    
 
         }
 
         function show2() {
-            if (document.getElementById("2").style.display == "none") {
-                document.getElementById("2").style.display = "block"
-                var elements=document.getElementsByClassName("EVform")
-                for (i=0;i<elements.length;i++){
-                    elements[i].required = true
+            cahrID.style.opacity="0.2"
+            evID.style.opacity="1"
+            cahrID.style.backgroundColor = "grey"
+            evID.backgroundColor = "white"
+            reset();
+                for (i=0;i<evElements.length;i++){
+                    charElements.item(i).setAttribute("disabled","true")
+                    charElements.item(i).value=""
                 } 
-            }
-            if (document.getElementById("1").style.display != "none") {
-                document.getElementById("1").style.display = "none"
-                var elements=document.getElementsByClassName("chargerForm")
-                for (i=0;i<elements.length;i++){
-                    elements[i].required = false
-                    //elements[i].value = ""
-                }
-            }
+
+                for (j=0;j<evElements.length;j++){
+                    evElements.item(j).removeAttribute("disabled")
+                }  
+
         }
         function show3() {
-            document.getElementById("2").style.display = "block";
-            document.getElementById("1").style.display = "block";
-            /*var elements1=document.getElementsByClassName("chargerForm")
-                for (i=0;i<elements1.length;i++){
-                    elements1[i].required = true
-                }
-            var elements2=document.getElementsByClassName("EVform")
-                for (j=0;j<elements2.length;j++){
-                    elements2[j].required = true
-                }*/
+            cahrID.style.opacity="1"
+            evID.style.opacity="1"
+            cahrID.style.backgroundColor = "white";
+            evID.style.backgroundColor = "white";
+            reset();
+             for (i=0;i<evElements.length;i++){
+                    evElements.item(i).removeAttribute("disabled")
+                } 
 
+                for (j=0;j<charElements.length;j++){
+                    charElements.item(j).removeAttribute("disabled")
+                } 
         }
     </script>
  
