@@ -61,6 +61,9 @@ def get_user(user_id):
 def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-def verify_password(password, hashed):
-    return bcrypt.checkpw(password.encode('utf-8'), hashed)
+def verify_password(password, hashed_password):
+    # add encriptyon here
+    #salt=hashed_password[:29].encode('utf-8')
+    #salted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return password==hashed_password
 

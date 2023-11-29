@@ -6,7 +6,7 @@
     <link rel="stylesheet" type= "text/css" href="../frontend/static/style.css">
     <title>Dashboard</title>
 </head>
-<body>
+<body onload="openTab(event, 'profile')">
 
 <div class="tabs">
     <a onclick="openTab(event, 'profile')">Profile</a>
@@ -19,7 +19,7 @@
     <h2>Profile</h2>
     <p>Content for the profile tab goes here.
         <br>
-        you are the user <b style="font-size: larger;color: #125ec2;">{{data.email[0]}}</b>
+        you are the user <b style="font-size: larger;color: #125ec2;">{{data.user_id}}</b>
     </p>
 </div>
 
