@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type= "text/css" href="../frontend/static/style.css">
     <title>Dashboard</title>
+    <script type='text/javascript' 
+            src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3" 
+            async defer>
+    </script>
+    <script type='text/javascript' >
+        var map
+        function GetMap()
+        {
+            var mapOptions ={
+                credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
+                center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
+                zoom: 15
+            }
+            map = new Microsoft.Maps.Map('#assetMap',mapOptions);
+    
+            var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), { color: 'red' });
+            map.entities.push(defaultPin);
+        }
+    </script>
 </head>
 <body onload="openTab(event, 'profile')">
 
@@ -86,5 +105,6 @@
     // Call the function to load external HTML
     loadExternalHTML();
 </script>
+
 </body>
 </html>
