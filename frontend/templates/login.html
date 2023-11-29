@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../frontend/static/style.css">
     <title>ChargeAnyWhere</title>
-    
 </head>
 <body>
 
@@ -20,14 +19,14 @@
 
         <div id="login-container">
             <h2>Login</h2>
-            <form id="login-form" action="/loginAuth" method="post">
+            <form id="login-form" method="post" action="/loginAuth">
                 <label for="email">Username:</label>
                 <input type="text" id="email" name="email" required>
 
                 <label for="password">Password:</label>
-                <input type="text" id="password" name="password" required>
+                <input type="password" id="password" name="password" required>
 
-                <button type="submit" >login</button>
+                <button type="submit">Login</button>
                 <p style="background-color:tomato;">
                     {{message}}
                 </p>
@@ -37,6 +36,27 @@
         </div>
     </div>
 
+    <script>
+        function submitForm() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
 
+            var formData = {
+                "email": email,
+                "password": password
+            };
+
+            fetch('/loginAuth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
