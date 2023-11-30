@@ -38,6 +38,8 @@
                     document.getElementById('lat').value=loc.latitude;
                     document.getElementById('long').value=loc.longitude;
 
+                    
+
                     if (map.entities.getLength() > 0 && map.entities.get(0) instanceof Microsoft.Maps.Pushpin) {
                         var existingPushpin = map.entities.get(0);
                         existingPushpin.setLocation(loc);
@@ -96,7 +98,16 @@
                 <div class="flex-child" id="1">
 
                     <h3>Charge Provider Information</h3>
-                    <label class="sr-only" for="location1">location:</label>
+
+                    <label for="chargerName">Charger Name:</label>
+                    <input class="chargerForm" type="text" id="chargerName" name="chargerName">
+                    <div class="form-text" id="basic-addon4">Give a name to your charger</div>
+                    <br> 
+            
+                    <div class="chargerForm" id="myMap" style="position:relative; width: 500px; height: 500px;" ></div>
+                    <div class="form-text" id="basic-addon4">Select your chargers location</div>
+                    <br>
+                    <label class="sr-only" for="location1">location: Select Location from the map</label>
                     <div class="form-row">
                         <div class="col">
                         <input type="text" class="chargerForm" name="lat" placeholder="latitude" id="lat">
@@ -105,15 +116,13 @@
                         <input type="text" class="chargerForm" name="long" placeholder="longitude" id="long">
                         </div>
                     </div>
-                    <br>
 
-            
-                    <div class="chargerForm" id="myMap" style="position:relative; width: 500px; height: 500px;" ></div>
                     <br>
                     <label for="capacity">capacity:</label>
                     <input class="chargerForm" type="text" id="capacity" name="capacity" 
                         placeholder="Your charger capacity">
-                    <br>
+                    <br>          
+
 
                     <label for="chargerType">Charger Type:</label>
                     <select class="chargerForm" type="text" id="chargerType" name="chargerType" 

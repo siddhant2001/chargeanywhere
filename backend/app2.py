@@ -64,7 +64,7 @@ def register_user():
     user_data = request.form.to_dict(flat=True)
 
     memberkeys = ['name', 'email', 'password','contact']
-    chargerkeys=['lat','long','capacity','chargerType']
+    chargerkeys=['lat','long','capacity','chargerType','chargerName']
     vehicleKeys=['model','make','EVchargerType']
 
     # Create a new dictionary with only the specified keys
@@ -87,8 +87,11 @@ def register_user():
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)
-    # print(userData)
-    return render_template("dash.html",data=userData)
+    if userData:
+    #print(userData)
+        return render_template("dash.html",data=userData)
+    else:
+        return render_template("login.html",message="")
 
 @app.route('/logout')
 def logout():
@@ -143,9 +146,8 @@ def getChargers():
             chargers_list.append(charger)
     return jsonify(chargers_list)
 
-
 @app.route('/getEVDashboardHTML')
-def getEVDashboardHTML():
+def getEVDashboardHTeML():
     userData=session.get('userData',None)
     render_template_data=render_template('evDashBoard.html',data=userData)
     tempfile='temp.html'
