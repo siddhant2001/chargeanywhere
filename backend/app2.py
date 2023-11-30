@@ -89,6 +89,21 @@ def register_user():
     session['userData']=userDict #need to change something here
     return redirect(url_for('dash'))
 
+@app.route('/addcharger' ,methods=['GET','POST'])
+def addcharger():
+    user_data = request.form.to_dict(flat=True)
+    chargerkeys=['capacity','chargerType','chargerName'] #add lat long when map is done
+    charger_data = {key: user_data[key] for key in chargerkeys if key in user_data}
+    userData=session.get('userData',None)
+    addCharger(charger_data,userData['name'])
+    userData=db.members.find_one({'name':userData['name']})
+    userData['_id']=str(userData['_id'])
+    userDict=dict(userData)
+    session['userData']=userDict #need to change something here
+    return redirect(url_for('dash'))
+
+
+
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)

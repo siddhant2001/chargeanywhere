@@ -71,19 +71,41 @@
 
     <div id="charger-details" class="tabscontent">
       <h2>Charger Details</h2>
-      <p>Content for the charger details tab goes here.</p>
+      <button onclick="addAsset()" style="text-align: right;">ADD new Charger</button>
+      <div class="overlay" id="overlay" onclick="closeForm()"></div>
+      <div class="popup-form" id="popupForm">
+          <span class="close-btn" onclick="closeForm()">&times;</span>
+          <h2>Popup Form</h2>
+          <form action="/addcharger" method="post">
+              <!-- Your form fields go here -->
+              <label for="chargerName">Charger Name:</label>
+              <input type="text" id="chargerName" name="chargerName" required>
+              <br>
+              <label for="capacity">capacity:</label>
+              <input type="text" id="capacity" name="capacity" required>
+              <br>
+              <label for="chargerType">Charger Type:</label>
+                <select class="chargerForm" type="text" id="chargerType" name="chargerType" 
+                    placeholder="The type of charger you have">
+                    <option value="Charger1">Charger1</option>
+                    <option value="Charger2">Charger2</option>
+                    <option value="Charger3">Charger3</option>
+                </select>
+                <br>
+                <input type="text" class="chargerForm" name="lat" placeholder="latitude" id="lat">
+                <input type="text" class="chargerForm" name="long" placeholder="longitude" id="lat">
+                <br>
+              <input type="submit" value="Submit">
+          </form>
+      </div>
       <div class="flex-container">
         <div class="flex-child">
             {% for cs in data.chargingStations %}
             <div style="display: flex;">
-            <div style="flex: 1;">Name :{{cs.chargerName}}</div>
-            <div style="flex: 1;">{{cs.lat}} - {{cs.long}}</div>
-            <div class="action-buttons">
-                <button class="edit-btn" onclick="editAsset()">Edit</button>
-                <button class="delete-btn" onclick="deleteAsset()">Delete</button>
-                
-            </div>
-            
+            <p>Name :{{cs.chargerName}}
+            <br>Location:[{{cs.lat}} - {{cs.long}}]
+            <br>Capacity:{{cs.capacity}}
+            <br>Capacity:{{cs.chargerType}}          
             </div>    
             {% endfor %}
         </div>
@@ -123,6 +145,7 @@
         });
       }
       function openTab(evt, tabName) {
+        closeForm();
         var i, tabscontent, tabs;
 
         // Hide all tabs
@@ -249,14 +272,19 @@
           });
         }
       }
-      function editAsset() {
+      function addAsset() {
         // Implement your edit functionality here
-        alert('Edit function triggered!');
+        openForm();
     }
 
-    function deleteAsset() {
-        // Implement your delete functionality here
-        alert('Delete function triggered!');
+    function openForm() {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("popupForm").style.display = "block";
+    }
+
+    function closeForm() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("popupForm").style.display = "none";
     }
       
 </script>
