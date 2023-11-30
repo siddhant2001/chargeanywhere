@@ -1,21 +1,45 @@
-<h1>hello beautiful</h1>
-<div class="flex-container">
-    <div class="flex-child" id="assetDetailDisplay">
-        
-        <li>17.44118930788632 - 78.34039924872503</li>
-        
-        <li>17.44118930788632 - 78.34039924872503</li>
-        
-        <li>17.44118930788632 - 78.34039924872503</li>
-        
-        <li>17.44118930788632 - 78.34039924872503</li>
-        
-
+<div class="ev-list-container">
+  <div>
+    
+    <div class="ev-list-item">
+      <h3 class="ev-list-item-title">Tesla 3 2020</h3>
+      <button
+        type="button"
+        onclick="addChargingStationPins(`Charger2`)"
+      >
+        Book now
+      </button>
     </div>
     
-    <div class="flex-child" id="assetMapDisplay"  style="text-align: center; box-shadow: none;" >
-        <div class="chargerForm" id="assetMap"  style="position: relative; width: 500px; height: 500px;"></div>
-                    
+    <div class="ev-list-item">
+      <h3 class="ev-list-item-title">Activa 2020</h3>
+      <button
+        type="button"
+        onclick="addChargingStationPins(`Charger1`)"
+      >
+        Book now
+      </button>
     </div>
-
+    
+    <div class="ev-list-item">
+      <h3 class="ev-list-item-title">Honda city 2021</h3>
+      <button
+        type="button"
+        onclick="addChargingStationPins(`Charger3`)"
+      >
+        Book now
+      </button>
+    </div>
+    
+  </div>
+  <div
+    id="myMap"
+    style="
+      opacity: 0;
+      pointer-events: none;
+      position: relative;
+      width: 500px;
+      height: 500px;
+    "
+  ></div>
 </div>

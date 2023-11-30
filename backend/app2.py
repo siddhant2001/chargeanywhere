@@ -113,12 +113,45 @@ def getChargerHTML():
 @app.route('/getChargers', methods=['GET'])
 def getChargers():
     members = db.members.find()
+    print(members,"members")
     chargers_list = []
     for member in members:
-        for charger in member['chargers']:
-            charger['_id'] = str(charger['_id'])
+        # print(members,"members 2")
+        # print(members.get('chargers'),"adf")
+        for charger in member.get('chargingStations', []):
+            print(charger, "charger")
+
+            # Add variables only if they exist
+            if 'lat' in charger:
+                charger['lat'] = charger['lat']
+            if 'long' in charger:
+                charger['long'] = charger['long']
+            if 'capacity' in charger:
+                charger['capacity'] = charger['capacity']
+            if 'chargerType' in charger:
+                charger['chargerType'] = charger['chargerType']
+            if 'chargerName' in charger:
+                charger['chargerName'] = charger['chargerName']
+
+            chargers_list.append(charger)
+        # self.longitude = longitude
+        # #self.owner_id = ObjectId(owner_id)  # Reference to an Owner document
+        # self.capacity = capacity
+        # self.available_slots = available_slots
+        # self.chargerType = chargerType
+        #     charger['_id'] = str(charger['_id'])
             chargers_list.append(charger)
     return jsonify(chargers_list)
+
+
+@app.route('/getEVDashboardHTML')
+def getEVDashboardHTML():
+    userData=session.get('userData',None)
+    render_template_data=render_template('evDashBoard.html',data=userData)
+    tempfile='temp.html'
+    with open(tempfile,'w',encoding='utf-8') as temp_file:
+        temp_file.write(render_template_data)
+    return send_file(tempfile)
 
 
 if __name__ == '__main__':

@@ -1,110 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type= "text/css" href="../frontend/static/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../frontend/static/style.css"
+    />
     <title>Dashboard</title>
-    <script type='text/javascript' 
-            src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3" 
-            async defer>
+    <script
+      type="text/javascript"
+      src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3"
+      async
+      defer
+    ></script>
+    <script type="text/javascript">
+      var map;
+      function GetMap() {
+        var mapOptions = {
+          credentials:
+            "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
+          center: new Microsoft.Maps.Location(
+            17.44509516273274,
+            78.34984062445746
+          ), //IIIT hyderabad
+          zoom: 15,
+        };
+        map = new Microsoft.Maps.Map("#assetMap", mapOptions);
+
+        var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), {
+          color: "red",
+        });
+        map.entities.push(defaultPin);
+      }
     </script>
-    <script type='text/javascript' >
-        var map
-        function GetMap()
-        {
-            var mapOptions ={
-                credentials: 'AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3',
-                center: new Microsoft.Maps.Location(17.44509516273274, 78.34984062445746), //IIIT hyderabad 
-                zoom: 15
-            }
-            map = new Microsoft.Maps.Map('#assetMap',mapOptions);
-    
-            var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), { color: 'red' });
-            map.entities.push(defaultPin);
-        }
-    </script>
-</head>
-<body onload="openTab(event, 'profile')">
+  </head>
+  <body onload="openTab(event, 'profile')">
+    <div class="tabs">
+      <a onclick="openTab(event, 'profile')">Profile</a>
+      <a onclick="openTab(event, 'charger-details')">Charger Details</a>
+      <a onclick="openTab(event, 'ev-details')">EV Details</a>
+      <a onclick="openTab(event, 'logout')" style="float: right">Logout</a>
+    </div>
 
-<div class="tabs">
-    <a onclick="openTab(event, 'profile')">Profile</a>
-    <a onclick="openTab(event, 'charger-details')">Charger Details</a>
-    <a onclick="openTab(event, 'ev-details')">EV Details</a>
-    <a onclick="openTab(event, 'logout')" style="float: right;">Logout</a>
-</div>
+    <div id="profile" class="tabscontent">
+      <h2>Profile</h2>
+      <p>
+        Content for the profile tab goes here.
+        <br />
+        you are the user
+        <b style="font-size: larger; color: #125ec2">{{data.name}}</b>
+      </p>
+    </div>
 
-<div id="profile" class="tabscontent">
-    <h2>Profile</h2>
-    <p>Content for the profile tab goes here.
-        <br>
-        you are the user <b style="font-size: larger;color: #125ec2;">{{data.name}}</b>
-    </p>
-</div>
+    <div id="charger-details" class="tabscontent">
+      <h2>Charger Details</h2>
+      <p>Content for the charger details tab goes here.</p>
+      <div id="chargerDash"></div>
+    </div>
 
-<div id="charger-details" class="tabscontent">
-    <h2>Charger Details</h2>
-    <p>Content for the charger details tab goes here.</p>
-    <div id="chargerDash"></div>
-</div>
-
-<div id="ev-details" class="tabscontent">
-    <h2>EV Details</h2>
-    <p>Content for the EV details tab goes here.</p>
-    <div id="evContent" class="ev-dispaly"></div>
-</div>
-<div id="logout" class="tabscontent" >
-    <h2>Logout</h2>
-    <p>Logging out you.</p>
-</div>
-<script>
-    // Function to open the selected tab
-    function openTab(evt, tabName) {
+    <div id="ev-details" class="tabscontent">
+      <h2>EV Details</h2>
+      <p>Content for the EV details tab goes here.</p>
+      <div id="evContent" class="ev-display"></div>
+    </div>
+    <div id="logout" class="tabscontent">
+      <h2>Logout</h2>
+      <p>Logging out you.</p>
+    </div>
+    <script>
+      // Function to open the selected tab
+      function openTab(evt, tabName) {
         var i, tabscontent, tabs;
 
         // Hide all tabs
         tabscontent = document.getElementsByClassName("tabscontent");
         for (i = 0; i < tabscontent.length; i++) {
-            tabscontent[i].style.display = "none";
+          tabscontent[i].style.display = "none";
         }
 
         // Deactivate all tab links
-        tabs = document.getElementsByClassName("tabs")[0].getElementsByTagName("a");
+        tabs = document
+          .getElementsByClassName("tabs")[0]
+          .getElementsByTagName("a");
         for (i = 0; i < tabs.length; i++) {
-            tabs[i].className = tabs[i].className.replace(" active", "");
+          tabs[i].className = tabs[i].className.replace(" active", "");
         }
 
         // Show the selected tab and set it as active
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
-    }
-</script>
-<script>
-    var di=document.getElementsByClassName('ev-dispaly');
-    var fullcontent;
-    if (true){
-        content='<h1>there is user</h1>';
-    }
-    else
-        content='<h1>nouser</h1>';
+      }
+    </script>
+    <!-- <script>
+      var di = document.getElementsByClassName("ev-display");
+      var fullcontent;
+      if (true) {
+        content = "<h1>there is user</h1>";
+      } else content = "<h1>nouser</h1>";
 
-    di.item(0).insertAdjacentHTML('afterbegin',content);
+      di.item(0).insertAdjacentHTML("afterbegin", content);
 
-    // Your existing JavaScript here
-</script>
-<script>
-    // Function to load external HTML into a div
-    function loadExternalHTML() {
-        
-        fetch('/getChargerHTML')
-            .then(response => response.text())
-            .then(data => {document.getElementById('chargerDash').innerHTML = data;})
-            .catch(error => console.error('Error loading external HTML:', error));
-    }
+      // Your existing JavaScript here
+    </script> -->
+    <script>
+      // Function to load external HTML into a div
+      function loadExternalHTML() {
+        fetch("/getChargerHTML")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("chargerDash").innerHTML = data;
+          })
+          .catch((error) =>
+            console.error("Error loading external HTML:", error)
+          );
 
-    // Call the function to load external HTML
-    loadExternalHTML();
-</script>
+        fetch("/getEVDashboardHTML")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("evContent").innerHTML = data;
+          })
+          .catch((error) =>
+            console.error("Error loading external HTML:", error)
+          );
+      }
 
-</body>
+      // Call the function to load external HTML
+      loadExternalHTML();
+    </script>
+
+    <!-- Bing Maps API Script -->
+    <script
+      type="text/javascript"
+      src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3"
+      async
+      defer
+    ></script>
+    <script>
+      var map;
+      function GetMap() {
+        var mapOptions = {
+          credentials:
+            "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
+          center: new Microsoft.Maps.Location(
+            17.44509516273274,
+            78.34984062445746
+          ), // IIIT hyderabad
+          zoom: 15,
+        };
+        map = new Microsoft.Maps.Map("#myMap", mapOptions);
+
+        var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), {
+          title: "You",
+          color: "red",
+        });
+        map.entities.push(defaultPin);
+      }
+
+      const pins = [];
+      async function addChargingStationPins(chargerType) {
+        document.querySelector("#myMap").style.opacity = "100";
+        document.querySelector("#myMap").style.pointerEvents = "all";
+
+        pins.forEach((pin) => {
+          map.entities.remove(pin);
+        });
+
+        const allChargersList = await fetch("/getChargers").then((res) =>
+          res.json()
+        );
+        const chargerTypeList = (allChargersList ? allChargersList : []).filter(
+          (charger) => charger.chargerType === chargerType
+        );
+
+        if (chargerTypeList.length === 0)
+          alert(`No chargers found for ${chargerType}`);
+        else {
+          (chargerTypeList ? chargerTypeList : []).forEach((charger, index) => {
+            const location = new Microsoft.Maps.Location(
+              charger.lat,
+              charger.long
+            );
+
+            //Create custom Pushpin
+            const pin = new Microsoft.Maps.Pushpin(location, {
+              title: charger.chargerName
+                ? charger.chargerName
+                : `Charger ${index + 1}`,
+              subTitle: charger.capacity,
+              color: "blue",
+            });
+
+            //Add the pushpin to the map
+            pins.push(pin);
+            map.entities.push(pin);
+          });
+        }
+      }
+    </script>
+  </body>
 </html>
