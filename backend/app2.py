@@ -147,7 +147,7 @@ def getChargers():
     return jsonify(chargers_list)
 
 @app.route('/getEVDashboardHTML')
-def getEVDashboardHTeML():
+def getEVDashboardHTML():
     userData=session.get('userData',None)
     render_template_data=render_template('evDashBoard.html',data=userData)
     tempfile='temp.html'
