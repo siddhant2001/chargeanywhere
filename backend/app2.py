@@ -109,7 +109,7 @@ def index():
 def getChargerHTML():
     userData=session.get('userData',None)
     render_template_data=render_template('ChargerDash.html',data=userData)
-    tempfile='temp.html'
+    tempfile='temp2.html'
     with open(tempfile,'w',encoding='utf-8') as temp_file:
         temp_file.write(render_template_data)
     return send_file(tempfile)\

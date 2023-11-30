@@ -16,7 +16,7 @@
       defer
     ></script>
     <script type="text/javascript">
-      var map;
+      var mapCharger;
       function GetMapCharger() {
         var mapOptions = {
           credentials:
@@ -27,12 +27,12 @@
           ), //IIIT hyderabad
           zoom: 15,
         };
-        map = new Microsoft.Maps.Map("#assetMap", mapOptions);
+        mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
 
         var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), {
           color: "red",
         });
-        map.entities.push(defaultPin);
+        mapCharger.entities.push(defaultPin);
       }
     </script>
   </head>

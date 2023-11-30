@@ -177,7 +177,7 @@ button:hover {
     border-radius: 8px;
     padding: 16px;
     margin: 16px;
-    width: 300px;
+    /*width: 300px;*/
     background-color: #f9f9f9;
     display: flex;
     
@@ -187,7 +187,7 @@ button:hover {
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 16px;
+    /*margin-top: 16px;*/
     width: 200px;
 }
 
@@ -204,7 +204,7 @@ button:hover {
     display: inline-block;
     font-size: 14px;
     margin-right: 8px;
-    
+    flex: 1;
     
 }
 

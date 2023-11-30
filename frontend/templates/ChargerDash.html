@@ -2,9 +2,9 @@
 <div class="flex-container">
     <div class="flex-child">
         {% for cs in data.chargingStations %}
-        <div>
-        <div>Name :{{cs.chargerName}}</div>
-        <div>{{cs.lat}} - {{cs.long}}</div>
+        <div style="display: flex;">
+        <div style="flex: 1;">Name :{{cs.chargerName}}</div>
+        <div style="flex: 1;">{{cs.lat}} - {{cs.long}}</div>
         <div class="action-buttons">
             <button class="edit-btn" onclick="editAsset()">Edit</button>
             <button class="delete-btn" onclick="deleteAsset()">Delete</button>
@@ -16,10 +16,11 @@
 
     
     
-</div>
+
 <div class="flex-child" id="assetMapDisplay"  style="text-align: center; box-shadow: none;" >
     <div class="chargerForm" id="assetMap"  style="position: relative; width: 500px; height: 500px;"></div>
                 
+</div>
 </div>
 
 
