@@ -46,10 +46,14 @@ def loginAuth():
     #session['userdata']=user
 
     userData=db.members.find_one({'email':dataIN['email']})
-    userData['_id']=str(userData['_id'])
-    userDict=dict(userData)
-    session['userData']=userDict #need to change something here
-
+    if userData:
+        userData['_id']=str(userData['_id'])
+        userDict=dict(userData)
+        session['userData']=userDict #need to change something here
+    else:
+        faildata = {"message": "Invalid username or password"}
+        return render_template('login.html', message=faildata), 401
+    
     if userData and verify_password(dataIN.get("password")[0], userData.get("password")[0]):
         # Login successful
         #dashData = jsonify({"message": "User logged in successfully"})
@@ -97,7 +101,7 @@ def dash():
 @app.route('/logout')
 def logout():
     session.pop('userData', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 

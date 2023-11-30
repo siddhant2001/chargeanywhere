@@ -43,7 +43,7 @@
               var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(cs.lat,cs.long),options)
           
           mapCharger.entities.push(pushpin)
-          console.log(i)
+          
           }
         }
       </script>
@@ -56,7 +56,7 @@
       <a onclick="openTab(event, 'profile')">Profile</a>
       <a onclick="openTab(event, 'charger-details')">Charger Details</a>
       <a onclick="openTab(event, 'ev-details')">EV Details</a>
-      <a onclick="openTab(event, 'logout')" style="float: right">Logout</a>
+      <a onclick="logout()" style="float: right">Logout</a>
     </div>
 
     <div id="profile" class="tabscontent">
@@ -108,6 +108,20 @@
     </div>
     <script>
       // Function to open the selected tab
+      function logout(){
+        fetch('/logout')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Redirect the user to the specified URL
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            // Handle errors during the fetch
+            console.error('Fetch error:', error);
+        });
+      }
       function openTab(evt, tabName) {
         var i, tabscontent, tabs;
 
