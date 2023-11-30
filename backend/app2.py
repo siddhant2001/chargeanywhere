@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, redirect, request, render_template, url_for, session, send_from_directory
+from flask import Flask, jsonify, redirect, request, render_template, send_file, url_for, session, send_from_directory
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 from models import  verify_password,createMember, addCharger,addVehicle
@@ -40,13 +40,19 @@ def register():
 
 @app.route('/loginAuth', methods=['POST'])
 def loginAuth():
-    dataIN = request.form.to_dict(flat=False)
-    user = db.users.find_one({"email": dataIN.get("email")})
-    session['userdata']=user
-    if user and verify_password(dataIN.get("password")[0], user.get("password")[0]):
+    dataIN = request.form.to_dict(flat=True)
+    #user = db.users.find_one({"email": dataIN.get("email")})
+    #session['userdata']=user
+
+    userData=db.members.find_one({'email':dataIN['email']})
+    userData['_id']=str(userData['_id'])
+    userDict=dict(userData)
+    session['userData']=userDict #need to change something here
+
+    if userData and verify_password(dataIN.get("password")[0], userData.get("password")[0]):
         # Login successful
         #dashData = jsonify({"message": "User logged in successfully"})
-        return render_template('dash.html'), 200
+        return redirect(url_for('dash'))
     else:
         # Login failed
         faildata = {"message": "Invalid username or password"}
@@ -81,7 +87,7 @@ def register_user():
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)
-    print(userData)
+    #print(userData)
     return render_template("dash.html",data=userData)
 
 @app.route('/logout')
@@ -97,8 +103,12 @@ def index():
 
 @app.route('/getChargerHTML')
 def getChargerHTML():
-    
-    return send_from_directory('../frontend/templates','ChargerDash.html')
+    userData=session.get('userData',None)
+    render_template_data=render_template('ChargerDash.html',data=userData)
+    tempfile='temp.html'
+    with open(tempfile,'w',encoding='utf-8') as temp_file:
+        temp_file.write(render_template_data)
+    return send_file(tempfile)
 
 
 if __name__ == '__main__':
