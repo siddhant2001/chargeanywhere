@@ -64,7 +64,7 @@ def register_user():
     user_data = request.form.to_dict(flat=True)
 
     memberkeys = ['name', 'email', 'password','contact']
-    chargerkeys=['lat','long','capacity','chargerType']
+    chargerkeys=['lat','long','capacity','chargerType','chargerName']
     vehicleKeys=['model','make','EVchargerType']
 
     # Create a new dictionary with only the specified keys
@@ -87,8 +87,11 @@ def register_user():
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)
-    # print(userData)
-    return render_template("dash.html",data=userData)
+    if userData:
+    #print(userData)
+        return render_template("dash.html",data=userData)
+    else:
+        return render_template("login.html",message="")
 
 @app.route('/logout')
 def logout():
@@ -120,7 +123,33 @@ def getChargers():
             chargers_list.append(charger)
     return jsonify(chargers_list)
 
+@app.route('/getEvHTML')
+def getEvHTML():
+    userData=session.get('userData',None)
+    render_template_data=render_template('evDashBoard.html',data=userData)
+    tempfile='temp.html'
+    with open(tempfile,'w',encoding='utf-8') as temp_file:
+        temp_file.write(render_template_data)
+    return send_file(tempfile)\
 
+@app.route('/getChargers', methods=['GET'])
+def getChargers():
+    members = db.members.find()
+    chargers_list = []
+    for member in members:
+        for charger in member['chargers']:
+            charger['_id'] = str(charger['_id'])
+            chargers_list.append(charger)
+    return jsonify(chargers_list)
+
+@app.route('/getEvHTML')
+def getEvHTML():
+    userData=session.get('userData',None)
+    render_template_data=render_template('evDashBoard.html',data=userData)
+    tempfile='temp.html'
+    with open(tempfile,'w',encoding='utf-8') as temp_file:
+        temp_file.write(render_template_data)
+    return send_file(tempfile)
 if __name__ == '__main__':
     app.run(debug=True)
 

@@ -51,7 +51,7 @@
 <div id="ev-details" class="tabscontent">
     <h2>EV Details</h2>
     <p>Content for the EV details tab goes here.</p>
-    <div id="evContent" class="ev-dispaly"></div>
+    <div id="evContent"></div>
 </div>
 <div id="logout" class="tabscontent" >
     <h2>Logout</h2>
@@ -79,19 +79,19 @@
         evt.currentTarget.className += " active";
     }
 </script>
-<script>
-    var di=document.getElementsByClassName('ev-dispaly');
+<!--<script>
+    var di = document.getElementsByClassName('ev-dispaly');
     var fullcontent;
-    if (true){
-        content='<h1>there is user</h1>';
+    if (true) {
+        content = '<h1>there is user</h1>';
     }
     else
-        content='<h1>nouser</h1>';
+        content = '<h1>nouser</h1>';
 
-    di.item(0).insertAdjacentHTML('afterbegin',content);
+    di.item(0).insertAdjacentHTML('afterbegin', content);
 
     // Your existing JavaScript here
-</script>
+</script>-->
 <script>
     // Function to load external HTML into a div
     function loadExternalHTML() {
@@ -99,6 +99,11 @@
         fetch('/getChargerHTML')
             .then(response => response.text())
             .then(data => {document.getElementById('chargerDash').innerHTML = data;})
+            .catch(error => console.error('Error loading external HTML:', error));
+
+        fetch('/getEvHTML')
+            .then(response => response.text())
+            .then(data => {document.getElementById('evContent').innerHTML = data;})
             .catch(error => console.error('Error loading external HTML:', error));
     }
 
