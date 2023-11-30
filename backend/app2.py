@@ -35,6 +35,7 @@ def login():
 
 @app.route('/register')
 def register():
+     session.pop('userData', None)
      return render_template("register.html",message="")
 
 
