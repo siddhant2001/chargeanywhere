@@ -1,11 +1,13 @@
 import json
+import uuid
 from flask import Flask, jsonify, redirect, request, render_template, send_file, url_for, session, send_from_directory
 from flask_restful import Api, Resource
 from pymongo import MongoClient
-from models import  verify_password,createMember, addCharger,addVehicle
+from models import  verify_password,createMember, addCharger, addVehicle, create_booking_slot
 from dotenv import load_dotenv
 load_dotenv()
 import os
+from datetime import datetime
 
 
 
@@ -69,7 +71,7 @@ def register_user():
     user_data = request.form.to_dict(flat=True)
 
     memberkeys = ['name', 'email', 'password','contact']
-    chargerkeys=['lat','long','capacity','chargerType','chargerName']
+    chargerkeys=['id','lat','long','capacity','chargerType','chargerName']
     vehicleKeys=['model','make','EVchargerType']
 
     # Create a new dictionary with only the specified keys
@@ -78,6 +80,7 @@ def register_user():
 
     username=db.members.find_one({'name':member_data['name']})
     charger_data = {key: user_data[key] for key in chargerkeys if key in user_data}
+    charger_data['id'] = str(uuid.uuid4())
     ChargerAddreply=addCharger(charger_data,username['name'])
 
     vehicle_data = {key: user_data[key] for key in vehicleKeys if key in user_data}
@@ -112,6 +115,12 @@ def dash():
         return render_template("dash.html",data=userData)
     else:
         return render_template("login.html",message="")
+    
+
+@app.route('/booking')
+def booking():
+    userData=session.get('userData',None)
+    return render_template("booking.html",data=userData)
 
 @app.route('/logout')
 def logout():
@@ -136,15 +145,12 @@ def getChargerHTML():
 @app.route('/getChargers', methods=['GET'])
 def getChargers():
     members = db.members.find()
-    #print(members,"members")
     chargers_list = []
     for member in members:
-        # print(members,"members 2")
-        # print(members.get('chargers'),"adf")
         for charger in member.get('chargingStations', []):
-            #print(charger, "charger")
-
             # Add variables only if they exist
+            if 'id' in charger:
+                charger['id'] = charger['id']
             if 'lat' in charger:
                 charger['lat'] = charger['lat']
             if 'long' in charger:
@@ -157,13 +163,6 @@ def getChargers():
                 charger['chargerName'] = charger['chargerName']
 
             chargers_list.append(charger)
-        # self.longitude = longitude
-        # #self.owner_id = ObjectId(owner_id)  # Reference to an Owner document
-        # self.capacity = capacity
-        # self.available_slots = available_slots
-        # self.chargerType = chargerType
-        #     charger['_id'] = str(charger['_id'])
-            chargers_list.append(charger)
     return jsonify(chargers_list)
 
 @app.route('/getEVDashboardHTML')
@@ -174,6 +173,89 @@ def getEVDashboardHTML():
     with open(tempfile,'w',encoding='utf-8') as temp_file:
         temp_file.write(render_template_data)
     return send_file(tempfile)
+
+
+@app.route('/create_booking', methods=['POST'])
+def create_booking():
+
+    # Get the raw request data
+    raw_data = request.get_data()
+
+    # Check if the request has JSON content
+    if request.is_json:
+        # Parse JSON data
+        request_data = json.loads(raw_data)
+    else:
+        # If not JSON, parse as form data
+        request_data = request.form.to_dict(flat=True)
+
+    # Extract data from the request
+    charging_id = request_data.get('charging_id')
+    date = request_data.get('date')
+    start_time = request_data.get('start_time')
+    end_time = request_data.get('end_time')
+    user_id = request_data.get('user_id')
+
+    # Validate the required data
+    if any(value is None for value in [user_id, charging_id, date, start_time, end_time]):
+        return jsonify({"error": "Missing required data"}), 400
+
+    # Convert date, start_time, and end_time to datetime objects
+    date = datetime.strptime(date, "%Y-%m-%d")
+    start_time = datetime.strptime(start_time, "%H:%M:%S")
+    end_time = datetime.strptime(end_time, "%H:%M:%S")
+
+    #first check whether the charging id exists or not in the DB
+    # userData=db.bookingslot.find_one({'_id':charging_id})
+    owner_data = db.members.find_one({"chargingStations.id": charging_id})
+    if not owner_data:
+        return jsonify({"error": "Owner not found"}), 404
+    
+    # Check if the same time slot is already taken
+    existing_booking = db.bookingslots.find_one({
+        "charging_id": charging_id,
+        "date": date,
+        "user_id": user_id,
+        "$or": [
+            {"start_time": {"$lt": end_time}, "end_time": {"$gt": start_time}},
+            {"start_time": {"$gte": start_time, "$lt": end_time}},
+            {"start_time": {"$lte": start_time}, "end_time": {"$gte": end_time}}
+        ]
+    })
+
+    if existing_booking:
+        return jsonify({"error": "Time slot already taken for the given date and charging station ID"}), 409
+
+    # Create a BookingSlot object
+    booking_slot = create_booking_slot(charging_id, date, start_time, end_time, user_id)
+
+    return jsonify({"success": True}), 200
+    
+
+@app.route('/charger_bookings/<charging_id>', methods=['GET'])
+def charger_bookings(charging_id):
+
+    charging_station_data = db.bookingslots.find({"charging_id": charging_id})
+
+    charging_stations = []
+    for charging_station in charging_station_data:
+        charging_station['_id'] = str(charging_station['_id'])
+        charging_stations.append(charging_station)
+
+        return jsonify({"data": charging_stations}), 200
+
+
+@app.route('/user_bookings/<user_id>', methods=['GET'])
+def user_bookings(user_id):
+
+    user_bookings_cursor = db.bookingslots.find({"user_id": user_id})
+
+    user_bookings = []
+    for booking in user_bookings_cursor:
+        booking['_id'] = str(booking['_id'])
+        user_bookings.append(booking)
+
+    return jsonify({"data": user_bookings}), 200
 
 
 if __name__ == '__main__':

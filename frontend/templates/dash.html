@@ -16,42 +16,39 @@
       defer
     ></script>
     <script type="text/javascript">
-        var mapCharger;
-        function GetMapCharger() {
-          var mapOptions = {
-            credentials:
-              "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
-            center: new Microsoft.Maps.Location(
-              17.44509516273274,
-              78.34984062445746
-            ), //IIIT hyderabad
-            zoom: 15,
-          };
-          mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
-  
-          var defaultPin = new Microsoft.Maps.Pushpin(mapCharger.getCenter(), {
-            color: "red",
-          });
-          mapCharger.entities.push(defaultPin);
-        
-            var data ={{ data | tojson | safe }};
+      var mapCharger;
+      function GetMapCharger() {
+        var mapOptions = {
+          credentials:
+            "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
+          center: new Microsoft.Maps.Location(
+            17.44509516273274,
+            78.34984062445746
+          ), //IIIT hyderabad
+          zoom: 15,
+        };
+        mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
 
-          for (var i=0;i<data.chargingStations.length; i++){
-                var cs = data.chargingStations[i];
+        var defaultPin = new Microsoft.Maps.Pushpin(mapCharger.getCenter(), {
+          color: "red",
+        });
+        mapCharger.entities.push(defaultPin);
 
-              var options ={color:'blue',title: cs.chargerName}
-              var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(cs.lat,cs.long),options)
-          
-          mapCharger.entities.push(pushpin)
-          
-          }
+          var data ={{ data | tojson | safe }};
+
+        for (var i=0;i<data.chargingStations.length; i++){
+              var cs = data.chargingStations[i];
+
+            var options ={color:'blue',title: cs.chargerName}
+            var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(cs.lat,cs.long),options)
+
+        mapCharger.entities.push(pushpin)
+
         }
-      </script>
-
+      }
+    </script>
   </head>
   <body onload="openTab(event, 'profile')">
-    
-
     <div class="tabs">
       <a onclick="openTab(event, 'profile')">Profile</a>
       <a onclick="openTab(event, 'charger-details')">Charger Details</a>
@@ -62,60 +59,86 @@
     <div id="profile" class="tabscontent">
       <h2>Profile</h2>
       <p>
-        Content for the profile tab goes here.
-        <br />
-        you are the user
+        Welcome
         <b style="font-size: larger; color: #125ec2">{{data.name}}</b>
       </p>
+      <h2>My Bookings</h2>
+      <div id="my-bookings"></div>
     </div>
 
     <div id="charger-details" class="tabscontent">
       <h2>Charger Details</h2>
-      <button onclick="addAsset()" style="text-align: right;">ADD new Charger</button>
+      <button onclick="addAsset()" style="text-align: right">
+        ADD new Charger
+      </button>
       <div class="overlay" id="overlay" onclick="closeForm()"></div>
       <div class="popup-form" id="popupForm">
-          <span class="close-btn" onclick="closeForm()">&times;</span>
-          <h2>Popup Form</h2>
-          <form action="/addcharger" method="post">
-              <!-- Your form fields go here -->
-              <label for="chargerName">Charger Name:</label>
-              <input type="text" id="chargerName" name="chargerName" required>
-              <br>
-              <label for="capacity">capacity:</label>
-              <input type="text" id="capacity" name="capacity" required>
-              <br>
-              <label for="chargerType">Charger Type:</label>
-                <select class="chargerForm" type="text" id="chargerType" name="chargerType" 
-                    placeholder="The type of charger you have">
-                    <option value="Charger1">Charger1</option>
-                    <option value="Charger2">Charger2</option>
-                    <option value="Charger3">Charger3</option>
-                </select>
-                <br>
-                <input type="text" class="chargerForm" name="lat" placeholder="latitude" id="lat">
-                <input type="text" class="chargerForm" name="long" placeholder="longitude" id="lat">
-                <br>
-              <input type="submit" value="Submit">
-          </form>
+        <span class="close-btn" onclick="closeForm()">&times;</span>
+        <h2>Popup Form</h2>
+        <form action="/addcharger" method="post">
+          <!-- Your form fields go here -->
+          <label for="chargerName">Charger Name:</label>
+          <input type="text" id="chargerName" name="chargerName" required />
+          <br />
+          <label for="capacity">capacity:</label>
+          <input type="text" id="capacity" name="capacity" required />
+          <br />
+          <label for="chargerType">Charger Type:</label>
+          <select
+            class="chargerForm"
+            type="text"
+            id="chargerType"
+            name="chargerType"
+            placeholder="The type of charger you have"
+          >
+            <option value="Charger1">Charger1</option>
+            <option value="Charger2">Charger2</option>
+            <option value="Charger3">Charger3</option>
+          </select>
+          <br />
+          <input
+            type="text"
+            class="chargerForm"
+            name="lat"
+            placeholder="latitude"
+            id="lat"
+          />
+          <input
+            type="text"
+            class="chargerForm"
+            name="long"
+            placeholder="longitude"
+            id="lat"
+          />
+          <br />
+          <input type="submit" value="Submit" />
+        </form>
       </div>
       <div class="flex-container">
         <div class="flex-child">
-            {% for cs in data.chargingStations %}
-            <div style="display: flex;">
-            <p>Name :{{cs.chargerName}}
-            <br>Location:[{{cs.lat}} - {{cs.long}}]
-            <br>Capacity:{{cs.capacity}}
-            <br>Capacity:{{cs.chargerType}}          
-            </div>    
-            {% endfor %}
+          {% for cs in data.chargingStations %}
+          <div style="display: flex">
+            <p>
+              Name :{{cs.chargerName}} <br />Location:[{{cs.lat}} - {{cs.long}}]
+              <br />Capacity:{{cs.capacity}} <br />Capacity:{{cs.chargerType}}
+            </p>
+          </div>
+
+          {% endfor %}
         </div>
-        
-    
-    <div class="flex-child" id="assetMapDisplay"  style="text-align: center; box-shadow: none;" >
-        <div class="chargerForm" id="assetMap"  style="position: relative; width: 500px; height: 500px;"></div>
-                    
-    </div>
-    </div>
+
+        <div
+          class="flex-child"
+          id="assetMapDisplay"
+          style="text-align: center; box-shadow: none"
+        >
+          <div
+            class="chargerForm"
+            id="assetMap"
+            style="position: relative; width: 500px; height: 500px"
+          ></div>
+        </div>
+      </div>
       <div id="chargerDash"></div>
     </div>
 
@@ -130,19 +153,19 @@
     </div>
     <script>
       // Function to open the selected tab
-      function logout(){
-        fetch('/logout')
-        .then(response => {
+      function logout() {
+        fetch("/logout")
+          .then((response) => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+              throw new Error("Network response was not ok");
             }
             // Redirect the user to the specified URL
             window.location.href = response.url;
-        })
-        .catch(error => {
+          })
+          .catch((error) => {
             // Handle errors during the fetch
-            console.error('Fetch error:', error);
-        });
+            console.error("Fetch error:", error);
+          });
       }
       function openTab(evt, tabName) {
         closeForm();
@@ -180,15 +203,15 @@
     </script> -->
     <script>
       // Function to load external HTML into a div
-      function loadExternalHTML() {
-       /* fetch("/getChargerHTML")
+      async function loadExternalHTML() {
+        fetch("/getChargerHTML")
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("chargerDash").innerHTML = data;
           })
           .catch((error) =>
             console.error("Error loading external HTML:", error)
-          );*/
+          );
 
         fetch("/getEVDashboardHTML")
           .then((response) => response.text())
@@ -198,12 +221,49 @@
           .catch((error) =>
             console.error("Error loading external HTML:", error)
           );
+
+        const response = await fetch("/user_bookings/{{data._id}}").then(
+          (response) => response.json()
+        );
+        const myBookings = response.data;
+
+        const myBookingsContainer = document.querySelector("#my-bookings");
+
+        const formatDate = (date) => {
+          const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          };
+          return date.toLocaleDateString("en-US", options);
+        };
+
+        const formatTime = (date) => {
+          const options = {
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          };
+          return date.toLocaleTimeString("en-US", options);
+        };
+
+        myBookings.forEach((booking, index) => {
+          const bookingItem = document.createElement("div");
+          bookingItem.innerHTML = `${index + 1}. At <b>${formatDate(
+            new Date(booking.date)
+          )}</b>, From <b>${formatTime(
+            new Date(booking.start_time)
+          )}</b> To <b>${formatTime(new Date(booking.end_time))}</b>`;
+          myBookingsContainer.appendChild(bookingItem);
+        });
       }
 
       // Call the function to load external HTML
       loadExternalHTML();
     </script>
 
+    <!-- EV Details page script -->
     <!-- Bing Maps API Script -->
     <script
       type="text/javascript"
@@ -232,14 +292,23 @@
         map.entities.push(defaultPin);
       }
 
-      const pins = [];
-      async function addChargingStationPins(chargerType) {
-        document.querySelector("#myMap").style.opacity = "100";
-        document.querySelector("#myMap").style.pointerEvents = "all";
+      let pins = [];
+      const addChargingStationPins = async (chargerType) => {
+        const chargingStationsList = document.querySelector(
+          "#charging-stations-list"
+        );
+
+        const chargingStationsMapContainer = document.querySelector(
+          "#charging-stations-map"
+        );
+        chargingStationsMapContainer.style.opacity = "100";
+        chargingStationsMapContainer.style.pointerEvents = "all";
 
         pins.forEach((pin) => {
           map.entities.remove(pin);
         });
+        pins = [];
+        chargingStationsList.innerHTML = null;
 
         const allChargersList = await fetch("/getChargers").then((res) =>
           res.json()
@@ -257,11 +326,13 @@
               charger.long
             );
 
+            const chargerName = charger.chargerName
+              ? charger.chargerName
+              : `Charger ${index + 1}`;
+
             //Create custom Pushpin
             const pin = new Microsoft.Maps.Pushpin(location, {
-              title: charger.chargerName
-                ? charger.chargerName
-                : `Charger ${index + 1}`,
+              title: chargerName,
               subTitle: charger.capacity,
               color: "blue",
             });
@@ -269,24 +340,31 @@
             //Add the pushpin to the map
             pins.push(pin);
             map.entities.push(pin);
+
+            const button = document.createElement("button");
+            button.innerText = `Book ${chargerName}`;
+            button.onclick = function redirect() {
+              window.location.href = `/booking?chargerId=${charger.id}`;
+            };
+
+            chargingStationsList.appendChild(button);
           });
         }
-      }
+      };
       function addAsset() {
         // Implement your edit functionality here
         openForm();
-    }
+      }
 
-    function openForm() {
+      function openForm() {
         document.getElementById("overlay").style.display = "block";
         document.getElementById("popupForm").style.display = "block";
-    }
+      }
 
-    function closeForm() {
+      function closeForm() {
         document.getElementById("overlay").style.display = "none";
         document.getElementById("popupForm").style.display = "none";
-    }
-      
-</script>
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../frontend/static/style.css"
+    />
+
+    <title>Book charging station</title>
+  </head>
+  <body>
+    <form id="booking-form" class="booking-form">
+      <div>
+        <h2>Book a time slot</h2>
+      </div>
+      <div>
+        <label for="date">Date</label>
+        <input type="date" id="date" />
+      </div>
+      <div>
+        <label for="start-time">Start time</label>
+        <input type="time" id="start-time" />
+      </div>
+      <div>
+        <label for="end-time">End time</label>
+        <input type="time" id="end-time" />
+      </div>
+      <div>
+        <button type="submit">Book now</button>
+      </div>
+    </form>
+
+    <script>
+      const bookingForm = document.querySelector("#booking-form");
+      bookingForm.addEventListener("submit", (e) => {
+        bookChargingStation(e);
+      });
+
+      const startTimeInput = document.querySelector("#start-time");
+      const endTimeInput = document.querySelector("#end-time");
+
+      const bookChargingStation = (e) => {
+        e.preventDefault();
+        // Get the current URL
+        const currentUrl = window.location.href;
+        const urlSearchParams = new URLSearchParams(new URL(currentUrl).search);
+        const chargerId = urlSearchParams.get("chargerId");
+
+        const date = document.querySelector("#date").value;
+
+        const payload = {
+          user_id: "{{data._id}}",
+          charging_id: chargerId,
+          date,
+          start_time: startTimeInput.value,
+          end_time: endTimeInput.value,
+        };
+
+        fetch("/create_booking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((response) => {
+            if (response.status === 409)
+              alert(
+                "Charging station is not available for the given time slot. Please choose another time slot."
+              );
+            if (response.status === 200) {
+              alert("Slot booked successfully.");
+              window.location = "/dash";
+            }
+          })
+          .catch((error) => alert(error.error));
+      };
+    </script>
+  </body>
+</html>

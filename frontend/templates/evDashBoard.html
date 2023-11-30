@@ -7,19 +7,16 @@
         type="button"
         onclick="addChargingStationPins(`{{ev.EVchargerType}}`)"
       >
-        Book now
+        View charging stations
       </button>
     </div>
     {% endfor %}
   </div>
-  <div
-    id="myMap"
-    style="
-      opacity: 0;
-      pointer-events: none;
-      position: relative;
-      width: 500px;
-      height: 500px;
-    "
-  ></div>
+  <div id="charging-stations-map" class="charging-stations-container">
+    <div
+      id="myMap"
+      style="position: relative; width: 500px; height: 500px"
+    ></div>
+    <div class="charging-stations-list" id="charging-stations-list"></div>
+  </div>
 </div>

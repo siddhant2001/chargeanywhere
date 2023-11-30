@@ -2,24 +2,41 @@
   <div>
     
     <div class="ev-list-item">
-      <h3 class="ev-list-item-title"> </h3>
+      <h3 class="ev-list-item-title">Tesla 3 2020</h3>
       <button
         type="button"
-        onclick="addChargingStationPins(``)"
+        onclick="addChargingStationPins(`Charger2`)"
       >
-        Book now
+        View charging stations
+      </button>
+    </div>
+    
+    <div class="ev-list-item">
+      <h3 class="ev-list-item-title">Activa 2020</h3>
+      <button
+        type="button"
+        onclick="addChargingStationPins(`Charger1`)"
+      >
+        View charging stations
+      </button>
+    </div>
+    
+    <div class="ev-list-item">
+      <h3 class="ev-list-item-title">Honda city 2021</h3>
+      <button
+        type="button"
+        onclick="addChargingStationPins(`Charger3`)"
+      >
+        View charging stations
       </button>
     </div>
     
   </div>
-  <div
-    id="myMap"
-    style="
-      opacity: 0;
-      pointer-events: none;
-      position: relative;
-      width: 500px;
-      height: 500px;
-    "
-  ></div>
+  <div id="charging-stations-map" class="charging-stations-container">
+    <div
+      id="myMap"
+      style="position: relative; width: 500px; height: 500px"
+    ></div>
+    <div class="charging-stations-list" id="charging-stations-list"></div>
+  </div>
 </div>

@@ -119,3 +119,27 @@ def verify_password(password, hashed_password):
 def get_user(username):
     user_data = db.users.find_one({"username": username})
     return user_data
+
+class BookingSlot:
+    def __init__(self, charging_id, date, start_time, end_time, user_id):
+        self.charging_id = charging_id
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.user_id = user_id
+
+def add_booking_slot(booking_data):
+    new_booking = db.bookingslots.insert_one(booking_data)
+    return str(new_booking.inserted_id)
+
+# Example function to create a booking slot
+def create_booking_slot(charging_id, date, start_time, end_time, user_id):
+    booking_data = {
+        'charging_id': charging_id,
+        'date': date,
+        'start_time': start_time,
+        'end_time': end_time,
+        'user_id': user_id,
+    }
+    booking_id = add_booking_slot(booking_data)
+    return str(booking_id)

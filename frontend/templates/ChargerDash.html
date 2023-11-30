@@ -1,48 +1,50 @@
 <h1>hello beautiful</h1>
 <div class="flex-container">
-    <div class="flex-child">
-        {% for cs in data.chargingStations %}
-        <div style="display: flex;">
-        <div style="flex: 1;">Name :{{cs.chargerName}}</div>
-        <div style="flex: 1;">{{cs.lat}} - {{cs.long}}</div>
-        <div class="action-buttons">
-            <button class="edit-btn" onclick="editAsset()">Edit</button>
-            <button class="delete-btn" onclick="deleteAsset()">Delete</button>
-            
-        </div>
-        
-        </div>    
-        {% endfor %}
+  <div class="flex-child">
+    {% for cs in data.chargingStations %}
+    <div style="display: flex">
+      <div style="flex: 1">Name :{{cs.chargerName}}</div>
+      <div style="flex: 1">{{cs.lat}} - {{cs.long}}</div>
+      <div class="action-buttons">
+        <button class="edit-btn" onclick="editAsset()">Edit</button>
+        <button class="delete-btn" onclick="deleteAsset()">Delete</button>
+      </div>
     </div>
-    
-
-<div class="flex-child" id="assetMapDisplay"  style="text-align: center; box-shadow: none;" >
-    <div class="chargerForm" id="assetMap"  style="position: relative; width: 500px; height: 500px;"></div>
-                
-</div>
+    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 
+<div
+  class="flex-child"
+  id="assetMapDisplay"
+  style="text-align: center; box-shadow: none"
+>
+  <div
+    class="chargerForm"
+    id="assetMap"
+    style="position: relative; width: 500px; height: 500px"
+  ></div>
+</div>
 
 <script>
-    function editAsset() {
-        // Implement your edit functionality here
-        alert('Edit function triggered!');
-    }
+  function editAsset() {
+    // Implement your edit functionality here
+    alert("Edit function triggered!");
+  }
 
-    function deleteAsset() {
-        // Implement your delete functionality here
-        alert('Delete function triggered!');
-    }
+  function deleteAsset() {
+    // Implement your delete functionality here
+    alert("Delete function triggered!");
+  }
 
-    function addPins(cs){
-      
-        if (mapCharger){
-            print('hello')
-            print(mapCharger)
-            var location = new Microsoft.Maps.location(cs.lat,cs.long);
-            var options ={color:'blue',title: cs.chargerName}
-            var pushpin = new Microsoft.Maps.pushpin(location)
-        }
-
+  function addPins(cs) {
+    if (mapCharger) {
+      print("hello");
+      print(mapCharger);
+      var location = new Microsoft.Maps.location(cs.lat, cs.long);
+      var options = { color: "blue", title: cs.chargerName };
+      var pushpin = new Microsoft.Maps.pushpin(location);
     }
+  }
 </script>
