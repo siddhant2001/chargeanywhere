@@ -16,27 +16,42 @@
       defer
     ></script>
     <script type="text/javascript">
-      var mapCharger;
-      function GetMapCharger() {
-        var mapOptions = {
-          credentials:
-            "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
-          center: new Microsoft.Maps.Location(
-            17.44509516273274,
-            78.34984062445746
-          ), //IIIT hyderabad
-          zoom: 15,
-        };
-        mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
+        var mapCharger;
+        function GetMapCharger() {
+          var mapOptions = {
+            credentials:
+              "AhU9NVPY79i3RTZOWr8FEhKZR5NcWpqXL1g-XBHjQxXCcDI2ok4QsXDkD79V33b3",
+            center: new Microsoft.Maps.Location(
+              17.44509516273274,
+              78.34984062445746
+            ), //IIIT hyderabad
+            zoom: 15,
+          };
+          mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
+  
+          var defaultPin = new Microsoft.Maps.Pushpin(mapCharger.getCenter(), {
+            color: "red",
+          });
+          mapCharger.entities.push(defaultPin);
+        
+            var data ={{ data | tojson | safe }};
 
-        var defaultPin = new Microsoft.Maps.Pushpin(mapCharger.getCenter(), {
-          color: "red",
-        });
-        mapCharger.entities.push(defaultPin);
-      }
-    </script>
+          for (var i=0;i<data.chargingStations.length; i++){
+                var cs = data.chargingStations[i];
+
+              var options ={color:'blue',title: cs.chargerName}
+              var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(cs.lat,cs.long),options)
+          
+          mapCharger.entities.push(pushpin)
+          console.log(i)
+          }
+        }
+      </script>
+
   </head>
   <body onload="openTab(event, 'profile')">
+    
+
     <div class="tabs">
       <a onclick="openTab(event, 'profile')">Profile</a>
       <a onclick="openTab(event, 'charger-details')">Charger Details</a>
@@ -57,6 +72,28 @@
     <div id="charger-details" class="tabscontent">
       <h2>Charger Details</h2>
       <p>Content for the charger details tab goes here.</p>
+      <div class="flex-container">
+        <div class="flex-child">
+            {% for cs in data.chargingStations %}
+            <div style="display: flex;">
+            <div style="flex: 1;">Name :{{cs.chargerName}}</div>
+            <div style="flex: 1;">{{cs.lat}} - {{cs.long}}</div>
+            <div class="action-buttons">
+                <button class="edit-btn" onclick="editAsset()">Edit</button>
+                <button class="delete-btn" onclick="deleteAsset()">Delete</button>
+                
+            </div>
+            
+            </div>    
+            {% endfor %}
+        </div>
+        
+    
+    <div class="flex-child" id="assetMapDisplay"  style="text-align: center; box-shadow: none;" >
+        <div class="chargerForm" id="assetMap"  style="position: relative; width: 500px; height: 500px;"></div>
+                    
+    </div>
+    </div>
       <div id="chargerDash"></div>
     </div>
 
@@ -107,14 +144,14 @@
     <script>
       // Function to load external HTML into a div
       function loadExternalHTML() {
-        fetch("/getChargerHTML")
+       /* fetch("/getChargerHTML")
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("chargerDash").innerHTML = data;
           })
           .catch((error) =>
             console.error("Error loading external HTML:", error)
-          );
+          );*/
 
         fetch("/getEVDashboardHTML")
           .then((response) => response.text())
@@ -198,19 +235,16 @@
           });
         }
       }
-    
-      function addPins(){
+      function editAsset() {
+        // Implement your edit functionality here
+        alert('Edit function triggered!');
+    }
 
-        for (cs in data.chargingStations)
-        if (mapCharger){
-            print('hello')
-            print(mapCharger)
-            var location = new Microsoft.Maps.location(cs.lat,cs.long);
-            var options ={color:'blue',title: cs.chargerName}
-            var pushpin = new Microsoft.Maps.pushpin(location)
-        }
-        }
-        addPins()
+    function deleteAsset() {
+        // Implement your delete functionality here
+        alert('Delete function triggered!');
+    }
+      
 </script>
   </body>
 </html>

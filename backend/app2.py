@@ -112,18 +112,18 @@ def getChargerHTML():
     tempfile='temp2.html'
     with open(tempfile,'w',encoding='utf-8') as temp_file:
         temp_file.write(render_template_data)
-    return send_file(tempfile)\
+    return send_file(tempfile)
 
 @app.route('/getChargers', methods=['GET'])
 def getChargers():
     members = db.members.find()
-    print(members,"members")
+    #print(members,"members")
     chargers_list = []
     for member in members:
         # print(members,"members 2")
         # print(members.get('chargers'),"adf")
         for charger in member.get('chargingStations', []):
-            print(charger, "charger")
+            #print(charger, "charger")
 
             # Add variables only if they exist
             if 'lat' in charger:
