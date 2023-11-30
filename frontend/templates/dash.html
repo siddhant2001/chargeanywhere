@@ -29,7 +29,7 @@
         };
         mapCharger = new Microsoft.Maps.Map("#assetMap", mapOptions);
 
-        var defaultPin = new Microsoft.Maps.Pushpin(map.getCenter(), {
+        var defaultPin = new Microsoft.Maps.Pushpin(mapCharger.getCenter(), {
           color: "red",
         });
         mapCharger.entities.push(defaultPin);
@@ -198,6 +198,19 @@
           });
         }
       }
-    </script>
+    
+      function addPins(){
+
+        for (cs in data.chargingStations)
+        if (mapCharger){
+            print('hello')
+            print(mapCharger)
+            var location = new Microsoft.Maps.location(cs.lat,cs.long);
+            var options ={color:'blue',title: cs.chargerName}
+            var pushpin = new Microsoft.Maps.pushpin(location)
+        }
+        }
+        addPins()
+</script>
   </body>
 </html>

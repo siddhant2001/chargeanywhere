@@ -8,8 +8,10 @@
         <div class="action-buttons">
             <button class="edit-btn" onclick="editAsset()">Edit</button>
             <button class="delete-btn" onclick="deleteAsset()">Delete</button>
+            
         </div>
-        </div>      
+        
+        </div>    
         {% endfor %}
     </div>
     
@@ -33,5 +35,17 @@
     function deleteAsset() {
         // Implement your delete functionality here
         alert('Delete function triggered!');
+    }
+
+    function addPins(cs){
+      
+        if (mapCharger){
+            print('hello')
+            print(mapCharger)
+            var location = new Microsoft.Maps.location(cs.lat,cs.long);
+            var options ={color:'blue',title: cs.chargerName}
+            var pushpin = new Microsoft.Maps.pushpin(location)
+        }
+
     }
 </script>
