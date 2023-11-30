@@ -87,7 +87,7 @@ def register_user():
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)
-    #print(userData)
+    # print(userData)
     return render_template("dash.html",data=userData)
 
 @app.route('/logout')
@@ -108,7 +108,17 @@ def getChargerHTML():
     tempfile='temp.html'
     with open(tempfile,'w',encoding='utf-8') as temp_file:
         temp_file.write(render_template_data)
-    return send_file(tempfile)
+    return send_file(tempfile)\
+
+@app.route('/getChargers', methods=['GET'])
+def getChargers():
+    members = db.members.find()
+    chargers_list = []
+    for member in members:
+        for charger in member['chargers']:
+            charger['_id'] = str(charger['_id'])
+            chargers_list.append(charger)
+    return jsonify(chargers_list)
 
 
 if __name__ == '__main__':
