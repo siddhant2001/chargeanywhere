@@ -2,7 +2,7 @@ import json
 from flask import Flask, jsonify, redirect, request, render_template, url_for, session, send_from_directory
 from flask_restful import Api, Resource
 from pymongo import MongoClient
-from models import create_user, create_owner, verify_password
+from models import  verify_password,createMember, addCharger,addVehicle
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -30,6 +30,7 @@ api.add_resource(HelloWorld, '/hello')
 
 @app.route('/login')
 def login():
+    session.pop('userData', None)
     return render_template("login.html",message="")
 
 @app.route('/register')
@@ -41,27 +42,46 @@ def register():
 def loginAuth():
     dataIN = request.form.to_dict(flat=False)
     user = db.users.find_one({"email": dataIN.get("email")})
+    session['userdata']=user
     if user and verify_password(dataIN.get("password")[0], user.get("password")[0]):
         # Login successful
-        dashData = jsonify({"message": "User logged in successfully"})
-        return render_template('dash.html', data=dashData), 200
+        #dashData = jsonify({"message": "User logged in successfully"})
+        return render_template('dash.html'), 200
     else:
         # Login failed
-        faildata = jsonify({"message": "Invalid username or password"})
+        faildata = {"message": "Invalid username or password"}
         return render_template('login.html', message=faildata), 401
 
 
 @app.route('/register_user', methods=['GET','POST'])
 def register_user():
-    user_data = request.form.to_dict(flat=False)
-    user_id = create_user(user_data)
-    userData=({"user_id": user_id})
-    session['userData']=userData
+    user_data = request.form.to_dict(flat=True)
+
+    memberkeys = ['name', 'email', 'password','contact']
+    chargerkeys=['lat','long','capacity','chargerType']
+    vehicleKeys=['model','make','EVchargerType']
+
+    # Create a new dictionary with only the specified keys
+    member_data = {key: user_data[key] for key in memberkeys if key in user_data}
+    user_id = createMember(member_data)
+
+    username=db.members.find_one({'name':member_data['name']})
+    charger_data = {key: user_data[key] for key in chargerkeys if key in user_data}
+    ChargerAddreply=addCharger(charger_data,username['name'])
+
+    vehicle_data = {key: user_data[key] for key in vehicleKeys if key in user_data}
+    vehicleAddreply=addVehicle(vehicle_data,username['name'])
+
+    userData=db.members.find_one({'name':member_data['name']})
+    userData['_id']=str(userData['_id'])
+    userDict=dict(userData)
+    session['userData']=userDict #need to change something here
     return redirect(url_for('dash'))
 
 @app.route('/dash')
 def dash():
     userData=session.get('userData',None)
+    print(userData)
     return render_template("dash.html",data=userData)
 
 @app.route('/logout')
